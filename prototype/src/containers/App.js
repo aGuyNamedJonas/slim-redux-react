@@ -8,66 +8,46 @@ import TodoChangeCreators from '../changes'
 import { createSelector } from 'reselect'
 
 // slim-redux: Remove actions from parameters!
-// const App = ({todos, store, actions}) => {
-const App = ({store, actions}) => {
-  const addTodo        = store.change(TodoChangeCreators.addTodo),
-        deleteTodo     = store.change(TodoChangeCreators.deleteTodo),
-        editTodo       = store.change(TodoChangeCreators.editTodo),
-        completeTodo   = store.change(TodoChangeCreators.completeTodo),
-        completeAll    = store.change(TodoChangeCreators.completeAll),
-        clearCompleted = store.change(TodoChangeCreators.clearCompleted);
+class App extends React.Component {
+  constructor(props) {
+    super(props);
 
-  // slim-redux
-  // const actions = {
-  //   addTodo,
-  //   deleteTodo,
-  //   editTodo,
-  //   completeTodo,
-  //   completeAll,
-  //   clearCompleted,
-  // }
+    const addTodo        = props.store.change(TodoChangeCreators.addTodo),
+          deleteTodo     = props.store.change(TodoChangeCreators.deleteTodo),
+          editTodo       = props.store.change(TodoChangeCreators.editTodo),
+          completeTodo   = props.store.change(TodoChangeCreators.completeTodo),
+          completeAll    = props.store.change(TodoChangeCreators.completeAll),
+          clearCompleted = props.store.change(TodoChangeCreators.clearCompleted);
 
-  const getTodosFromStore = createSelector(
-    [ state => state.todos ],
-    todos => todos,
-  )
+    this.actions = {
+      addTodo,
+      deleteTodo,
+      editTodo,
+      completeTodo,
+      completeAll,
+      clearCompleted,
+    }
 
-  var todos = getTodosFromStore(store.getState())
+    this.getTodosFromStore = createSelector(
+      [ state => state.todos ],
+      todos => todos,
+    )
 
-  return (
-    <div>
-      <Header addTodo={actions.addTodo} />
-      <MainSection todos={todos} actions={actions} />
-    </div>
-  )
+    this.state = {
+      todos: this.getTodosFromStore(props.store.getState())
+    };
+
+    // SUBSCRIBE THAT MOTHERFUCKER!!
+  }
+
+  render() {
+    return (
+      <div>
+        <Header addTodo={this.actions.addTodo} />
+        <MainSection todos={this.state.todos} actions={this.actions} />
+      </div>
+    )
+  }
 }
 
-App.propTypes = {
-  todos: PropTypes.array.isRequired,
-  actions: PropTypes.object.isRequired
-}
-
-const mapStateToProps = state => ({
-  todos: state.todos
-})
-
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(TodoActions, dispatch)
-})
-
-/*
-    Actions will be replaced by something like this:
-    import * as todoChangeCreators from '../changes'
-
-    const { addTodo, removeTodo, .... } = todoChangeCreators.map((changeCreator) => store.change({
-      action: changeCreator.action,
-      reducer: changeCreator.reducer,
-      inputValidation: changeCreator.inputValidation,
-    }))
-
-*/
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App)
+export default App
