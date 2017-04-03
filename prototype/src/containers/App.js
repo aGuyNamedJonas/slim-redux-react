@@ -5,9 +5,11 @@ import Header from '../components/Header'
 import MainSection from '../components/MainSection'
 import * as TodoActions from '../actions'
 import TodoChangeCreators from '../changes'
+import { createSelector } from 'reselect'
 
 // slim-redux: Remove actions from parameters!
-const App = ({todos, store, actions}) => {
+// const App = ({todos, store, actions}) => {
+const App = ({store, actions}) => {
   const addTodo        = store.change(TodoChangeCreators.addTodo),
         deleteTodo     = store.change(TodoChangeCreators.deleteTodo),
         editTodo       = store.change(TodoChangeCreators.editTodo),
@@ -24,6 +26,13 @@ const App = ({todos, store, actions}) => {
   //   completeAll,
   //   clearCompleted,
   // }
+
+  const getTodosFromStore = createSelector(
+    [ state => state.todos ],
+    todos => todos,
+  )
+
+  var todos = getTodosFromStore(store.getState())
 
   return (
     <div>
