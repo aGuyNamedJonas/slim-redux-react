@@ -5,13 +5,15 @@ import Header from '../components/Header'
 import MainSection from '../components/MainSection'
 import * as TodoActions from '../actions'
 import TodoChangeCreators from '../changes'
-import { createSelector } from 'reselect'
+import { createNotifyingSelector, areArgumentsShallowlyEqual } from '../lib/slimReduxReact'
+import isEqual from 'lodash.isequal'
 
 // slim-redux: Remove actions from parameters!
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.store = props.store;
+    this.shouldUpdate = false; // This defaults to false and is only changed through the subscibe() call
 
     const addTodo        = props.store.change(TodoChangeCreators.addTodo),
           deleteTodo     = props.store.change(TodoChangeCreators.deleteTodo),
@@ -29,7 +31,7 @@ class App extends React.Component {
       clearCompleted,
     }
 
-    this.getTodosFromStore = createSelector(
+    this.getTodosFromStore = createNotifyingSelector(
       [ state => state.todos ],
       todos => todos,
     )
@@ -44,6 +46,20 @@ class App extends React.Component {
     this.store.subscribe(() => this.setState({
       todos: this.getTodosFromStore(this.store.getState()),
     }))
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    let update = false;
+
+    // Step #1: Check whether the subscribed to values have changed
+    update = update || this.shouldUpdate;
+
+    // Step #2: Check whether state or props have changed
+    // update = update || isEqual(this.props, nextProps) || isEqual(this.state, nextState);
+    update = update || areArgumentsShallowlyEqual(this.equalityCheck, this.props, nextProps)
+                    || areArgumentsShallowlyEqual(this.equalityCheck, this.state, nextState);
+
+    return update;
   }
 
   render() {
