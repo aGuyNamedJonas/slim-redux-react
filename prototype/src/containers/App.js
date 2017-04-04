@@ -11,6 +11,7 @@ import { createSelector } from 'reselect'
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.store = props.store;
 
     const addTodo        = props.store.change(TodoChangeCreators.addTodo),
           deleteTodo     = props.store.change(TodoChangeCreators.deleteTodo),
@@ -34,10 +35,15 @@ class App extends React.Component {
     )
 
     this.state = {
-      todos: this.getTodosFromStore(props.store.getState())
+      todos: this.getTodosFromStore(this.store.getState())
     };
+  }
 
+  componentDidMount() {
     // SUBSCRIBE THAT MOTHERFUCKER!!
+    this.store.subscribe(() => this.setState({
+      todos: this.getTodosFromStore(this.store.getState()),
+    }))
   }
 
   render() {
