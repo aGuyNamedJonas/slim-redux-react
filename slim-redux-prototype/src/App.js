@@ -20,7 +20,7 @@ class App extends Component {
       ],
       otherState: 'hello',
       anotherState: 'world',
-    }));
+    }), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
     initSlimRedux(this.store);
 
@@ -55,7 +55,7 @@ class App extends Component {
     return (
       <div>
         <Provider store={this.store}>
-          <TodoList todos={todos}/>
+          <TodoList/>
         </Provider>
       </div>
     );

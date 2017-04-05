@@ -1,9 +1,5 @@
 import React from 'react';
-import { getNotifyingSelectorCreator, areArgumentsShallowlyEqual } from './selector'
-
-const subscribe = (subscriptions, store) => {
-
-}
+import { getNotifyingSelectorCreator, areArgumentsShallowlyEqual } from './selector';
 
 function slimReduxReact(params) {
   const WrappedComponent = params.component;
@@ -14,7 +10,6 @@ function slimReduxReact(params) {
 
   const displayName = WrappedComponent.displayName || WrappedComponent.name || '';
 
-  // TODO: Finish handling subscriptions!
   // Returns the appropriate part of the state for a string like "state.todo.active"
   const _getStateFromSubscriptionString = (subscriptionString, state) => {
     const subStringParts = subscriptionString.split('.');
@@ -40,32 +35,50 @@ function slimReduxReact(params) {
     Object.keys(subscriptions).map(subscription => storeSubscriptions[subscription] = _getStateFromSubscriptionString(subscriptions[subscription], state))
 
     console.log(`Store subscriptions: ${JSON.stringify(storeSubscriptions, null, 2)}`)
-    return state.todos;
+    return storeSubscriptions;
   }
 
+  // Create subscrption selector
   const createNotifyingSelector = getNotifyingSelectorCreator();
   const checkSubscriptionSelector = createNotifyingSelector(
     getSubscriptions,
-    data => data,
+    subscriptionData => subscriptionData,
   );
 
-  // TODO: Do processing of change triggers - in case it's not functions, but just change() parameters
+  // Create change creators    TODO: change creators could also be functions to mock stuff!!
+  const registerChangeTriggers = (changeTriggers, change) => {
+    var registeredChangeTriggers = {}
+    Object.keys(changeTriggers).map(changeTrigger => registeredChangeTriggers[changeTrigger] = change(changeTriggers[changeTrigger]))
+
+    return registeredChangeTriggers;
+  }
 
   class SlimReduxConnector extends React.Component {
-    constructor(props){
+    constructor(props, context){
       super(props);
+
+      const initialSubscriptionState = checkSubscriptionSelector(context.store.getState())
+      this.state = { ...initialSubscriptionState.data }
+
+      this.registeredChangeTriggers = registerChangeTriggers(changeTriggers, context.store.change)
     }
 
     componentDidMount() {
-      const initialSubscriptionState = checkSubscriptionSelector(this.context.store.getState())
-      this.setState({
-        ...initialSubscriptionState
+      // SUBSCRIBE THIS MOTHERFUCKER TO SUBSCRIPTION CHANGES!
+      this.context.store.subscribe(() => {
+        const subscriptionState = checkSubscriptionSelector(this.context.store.getState())
+
+        if(subscriptionState.hasChanged)
+          console.log(`***UPDATED subscriptionState: ${JSON.stringify(subscriptionState, null, 2)}`)
+          this.setState({
+            ...this.state,
+            ...subscriptionState.data,
+        })
       })
     }
 
     render() {
-      console.log(`Did the store arrive in HOC? ${this.context.store.TEST}`)
-      return <WrappedComponent {...this.props} {...changeTriggers} />
+      return <WrappedComponent {...this.props} {...this.registeredChangeTriggers} {...this.state}/>
     }
   }
 
