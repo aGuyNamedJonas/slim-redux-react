@@ -24,7 +24,7 @@ export function areArgumentsShallowlyEqual(equalityCheck, prev, next) {
   return true
 }
 
-function defaultMemoize(func, equalityCheck = defaultEqualityCheck, hasChanged) {
+function defaultMemoize(func, equalityCheck = defaultEqualityCheck) {
   let lastArgs = null
   let lastResult = null
   // we reference arguments instead of spreading them for performance reasons
@@ -39,13 +39,13 @@ function defaultMemoize(func, equalityCheck = defaultEqualityCheck, hasChanged) 
 
     lastArgs = arguments
 
-    hasChanged(changed)
-    return lastResult
+    return {
+      hasChanged: changed,
+      data: lastResult,
+    }
   }
 }
 
-export const createNotifyingSelector = (hasChanged) => createSelectorCreator(
+export const getNotifyingSelectorCreator = () => createSelectorCreator(
   defaultMemoize,
-  undefined,
-  hasChanged,
 )

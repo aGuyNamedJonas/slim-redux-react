@@ -5,7 +5,7 @@ import Header from '../components/Header'
 import MainSection from '../components/MainSection'
 import * as TodoActions from '../actions'
 import TodoChangeCreators from '../changes'
-import { createNotifyingSelector, areArgumentsShallowlyEqual } from '../lib/slimReduxReact'
+import { getNotifyingSelectorCreator, areArgumentsShallowlyEqual } from '../lib/slimReduxReact'
 import isEqual from 'lodash.isequal'
 
 // slim-redux: Remove actions from parameters!
@@ -31,38 +31,60 @@ class App extends React.Component {
       clearCompleted,
     }
 
-    this.getTodosFromStore = createNotifyingSelector(
+    const createNotifyingSelector = getNotifyingSelectorCreator()
+
+    this.checkSubscriptionSelector = createNotifyingSelector(
       [ state => state.todos ],
-      todos => todos,
+      todos => ({todos: todos}),
     )
 
+    const initialSubscriptionState = this.checkSubscriptionSelector(this.store.getState())
+
     this.state = {
-      todos: this.getTodosFromStore(this.store.getState())
-    };
+      ...initialSubscriptionState.data,
+      shouldUpdate: true,
+    }
   }
 
   componentDidMount() {
     // SUBSCRIBE THAT MOTHERFUCKER!!
-    this.store.subscribe(() => this.setState({
-      todos: this.getTodosFromStore(this.store.getState()),
-    }))
+    this.store.subscribe(() => {
+      const subscriptionState = this.checkSubscriptionSelector(this.store.getState())
+
+      if(subscriptionState.hasChanged)
+        this.setState({
+          ...this.state,
+          shouldUpdate: subscriptionState.hasChanged,
+          ...subscriptionState.data,
+      })
+    })
   }
 
+  // This gets triggered by state changes, so we can be sure to hit this check
+  // once we set a new state in the createNotifyingSelector call
   shouldComponentUpdate(nextProps, nextState) {
+    console.log(`Calling shouldComponentUpdate with nextState.shouldUpdate: ${nextState.shouldUpdate}`)
+    console.log(`nextState: ${JSON.stringify(nextState, null, 2)}`)
+
     let update = false;
 
     // Step #1: Check whether the subscribed to values have changed
-    update = update || this.shouldUpdate;
+    update = update || nextState.shouldUpdate;
 
-    // Step #2: Check whether state or props have changed
-    // update = update || isEqual(this.props, nextProps) || isEqual(this.state, nextState);
+    // Step #2: Check whether props have changed
     update = update || areArgumentsShallowlyEqual(this.equalityCheck, this.props, nextProps)
-                    || areArgumentsShallowlyEqual(this.equalityCheck, this.state, nextState);
 
+    // If shouldUpdate was set to true, reset it
+    if(nextState.shouldUpdate)
+      nextState.shouldUpdate = false
+
+    console.log(`should this update? ${update}`)
     return update;
   }
 
   render() {
+    console.log(`Current state: ${JSON.stringify(this.state, null, 2)}`)
+
     return (
       <div>
         <Header addTodo={this.actions.addTodo} />
