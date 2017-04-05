@@ -17,5 +17,9 @@ export default slimReduxReact({
   component: TodoList,
   changeTriggers: {
     addTodo: () => console.log('ADD_TODO change trigger called!')
+  },
+  subscriptions: {
+    todos: 'state.todos',
+    other: 'state.anotherStae',
   }
 });

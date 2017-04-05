@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { createStore, Provider } from 'redux';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import { createSlimReduxReducer, initSlimRedux } from 'slim-redux';
 import logo from './logo.svg';
 import './App.css';
@@ -18,6 +19,7 @@ class App extends Component {
         }
       ],
       otherState: 'hello',
+      anotherState: 'world',
     }));
 
     initSlimRedux(this.store);
@@ -36,6 +38,7 @@ class App extends Component {
     })
 
     this.store.subscribe(() => console.log(`Current store: \n ${JSON.stringify(this.store.getState(), null, 2)}`));
+    this.store['TEST'] = 'HELLO STORE!'
 
     addTodo({
       todo: {
@@ -51,7 +54,9 @@ class App extends Component {
 
     return (
       <div>
-        <TodoList todos={todos}/>
+        <Provider store={this.store}>
+          <TodoList todos={todos}/>
+        </Provider>
       </div>
     );
   }
