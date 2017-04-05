@@ -3,13 +3,20 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import Header from '../components/Header'
 import MainSection from '../components/MainSection'
-import * as TodoActions from '../actions'
 import TodoChangeCreators from '../changes'
-import { getNotifyingSelectorCreator, areArgumentsShallowlyEqual } from '../lib/slimReduxReact'
+import { getNotifyingSelectorCreator, areArgumentsShallowlyEqual } from '../lib/selector'
 import isEqual from 'lodash.isequal'
+import { slimReduxReact } from '../lib/slimReduxReact'
 
-// slim-redux: Remove actions from parameters!
-class App extends React.Component {
+const App = (props) => (
+  <div>
+    <Header addTodo={props.actions.addTodo} />
+    <MainSection todos={props.todos} actions={props.actions} />
+  </div>
+)
+
+/* THIS CODE WORKS! (just remove the _Prototype from the name) */
+class AppContainer extends React.Component {
   constructor(props) {
     super(props);
     this.store = props.store;
@@ -84,14 +91,16 @@ class App extends React.Component {
 
   render() {
     console.log(`Current state: ${JSON.stringify(this.state, null, 2)}`)
+    const wrapperProps = {
+      ...this.props,
+      todos: this.state.todos,
+      actions: this.actions,
+    }
 
     return (
-      <div>
-        <Header addTodo={this.actions.addTodo} />
-        <MainSection todos={this.state.todos} actions={this.actions} />
-      </div>
+      <App {...wrapperProps}/>
     )
   }
 }
 
-export default App
+export default AppContainer

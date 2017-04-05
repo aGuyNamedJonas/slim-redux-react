@@ -1,51 +1,23 @@
-import { createSelectorCreator } from 'reselect'
+import React from 'react';
 
-/*
-  Prototyping the custom selector to notify us about updates
-*/
+const slimReduxReact = function(Component){
+  /*
+      component: App,
+      subscriptions: {
+        todos: 'store.todos',
+      },
+      changeTriggers: TodoChangeCreators
+  */
 
-function defaultEqualityCheck(a, b) {
-  return a === b
-}
-
-export function areArgumentsShallowlyEqual(equalityCheck, prev, next) {
-  if (prev === null || next === null || prev.length !== next.length) {
-    return false
-  }
-
-  // Do this in a for loop (and not a `forEach` or an `every`) so we can determine equality as fast as possible.
-  const length = prev.length
-  for (let i = 0; i < length; i++) {
-    if (!equalityCheck(prev[i], next[i])) {
-      return false
+  return class slimReduxReactContainer extends React.Component {
+    render() {
+      return <Component {...this.props}/>
     }
   }
 
-  return true
+  // Create a component which wraps the passed in component
+  // Add subscriptions to the neccessary things
+  // Update the props of the wrapped component on update!
 }
 
-function defaultMemoize(func, equalityCheck = defaultEqualityCheck) {
-  let lastArgs = null
-  let lastResult = null
-  // we reference arguments instead of spreading them for performance reasons
-  return function () {
-    let changed = false
-
-    if (!areArgumentsShallowlyEqual(equalityCheck, lastArgs, arguments)) {
-      // apply arguments instead of spreading for performance.
-      lastResult = func.apply(null, arguments)
-      changed = true
-    }
-
-    lastArgs = arguments
-
-    return {
-      hasChanged: changed,
-      data: lastResult,
-    }
-  }
-}
-
-export const getNotifyingSelectorCreator = () => createSelectorCreator(
-  defaultMemoize,
-)
+export default slimReduxReact;
