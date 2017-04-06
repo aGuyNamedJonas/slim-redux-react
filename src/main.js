@@ -1,4 +1,4 @@
-import { slimReduxReact } from './slimReduxReact'
+import slimReduxReact from './slimReduxReact'
 
 export {
   slimReduxReact,

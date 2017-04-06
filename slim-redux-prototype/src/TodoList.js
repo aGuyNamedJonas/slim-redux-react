@@ -1,5 +1,5 @@
 import React from 'react';
-import slimReduxReact from './lib/slimReduxReact';
+import { slimReduxReact } from 'slim-redux-react';
 
 const TodoList = (props) => {
   return (
