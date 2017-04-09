@@ -3,8 +3,8 @@ import { getNotifyingSelectorCreator, areArgumentsShallowlyEqual } from './selec
 
 function slimReduxReact(params) {
   const WrappedComponent = params.component;
-  const changeTriggers   = params.changeTriggers;
-  const subscriptions    = params.subscriptions;
+  const changeTriggers   = params.changeTriggers || {};
+  const subscriptions    = params.subscriptions || {};
 
   const displayName = WrappedComponent.displayName || WrappedComponent.name || '';
 
@@ -53,10 +53,13 @@ function slimReduxReact(params) {
     constructor(props, context){
       super(props);
 
+      if(!context.store)
+        console.error(`*** Error in SlimReduxConnector component: No store found in context. Did you forget to wrap your code in the <Provider> component?`);
+
       const initialSubscriptionState = checkSubscriptionSelector(context.store.getState())
       this.state = { ...initialSubscriptionState.data }
 
-      this.registeredChangeTriggers = registerChangeTriggers(changeTriggers, context.store.change)
+      this.registeredChangeTriggers = registerChangeTriggers(changeTriggers, context.store.createChangeTrigger)
     }
 
     componentDidMount() {
