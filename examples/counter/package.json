@@ -1,14 +1,14 @@
 {
-  "name": "slim-redux-prototype",
+  "name": "counter",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "react-redux": "^5.0.3",
+    "react": "^15.5.3",
+    "react-dom": "^15.5.3",
+    "react-redux": "^5.0.4",
     "redux": "^3.6.0",
-    "reselect": "^3.0.0",
-    "slim-redux": "0.0.5"
+    "slim-redux": "*",
+    "slim-redux-react": "*"
   },
   "devDependencies": {
     "react-scripts": "0.9.5"

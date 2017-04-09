@@ -42,12 +42,7 @@ function slimReduxReact(params) {
   );
 
   // Create change creators    TODO: change creators could also be functions to mock stuff!!
-  const registerChangeTriggers = (changeTriggers) => {
-    var registeredChangeTriggers = {}
-    Object.keys(changeTriggers).map(changeTrigger => registeredChangeTriggers[changeTrigger] = context.store.createChangeTrigger(changeTriggers[changeTrigger]))
 
-    return registeredChangeTriggers;
-  }
 
   class SlimReduxConnector extends React.Component {
     constructor(props, context){
@@ -59,7 +54,8 @@ function slimReduxReact(params) {
       const initialSubscriptionState = checkSubscriptionSelector(context.store.getState())
       this.state = { ...initialSubscriptionState.data }
 
-      this.registeredChangeTriggers = registerChangeTriggers(changeTriggers)
+      this.registeredChangeTriggers = {}
+      Object.keys(changeTriggers).map(changeTrigger => this.registeredChangeTriggers[changeTrigger] = context.store.createChangeTrigger(changeTriggers[changeTrigger]))
     }
 
     componentDidMount() {
