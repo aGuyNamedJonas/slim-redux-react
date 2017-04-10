@@ -1,7 +1,10 @@
 Simple vs. Complex Containers
 =============================
 
-This example shows two different kinds of containers that are possible and suggested for `slim-redux-react`:  
+This example shows two different kinds of containers that are possible and suggested for `slim-redux-react`.  
+
+Not sure what I mean by "containers / container components" in this context?  
+[It's a redux term](http://redux.js.org/docs/basics/UsageWithReact.html#presentational-and-container-components) for separating your components into two kinds: Components that just display stuff and call callbacks (view components) and components that usually don't have any visual output, but provide data and callbacks to a view component that they wrap (container components).
 
 ### Simple container components
 The simple container is just a component with direct access to a few subscriptions and change triggers:  
