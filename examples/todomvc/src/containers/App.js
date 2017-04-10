@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Header from '../components/Header'
 import MainSection from '../components/MainSection'
 import * as TodoActions from '../actions'
+import { slimReduxReact } from 'slim-redux-react'
 
 // NEW: Import slim-redux-react
 import { slimReduxReact } from 'slim-redux-react'
@@ -28,6 +29,7 @@ App.propTypes = {
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(TodoActions, dispatch)
 })
+
 
 // NEW: pass in the todos as slim-redux-react subscriptions
 const AppContainer = slimReduxReact({
