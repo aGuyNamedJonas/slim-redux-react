@@ -1,6 +1,6 @@
 # slim-redux-react TodoMVC Example
 This classic TodoMVC example is actually an example of how you can refactor an existing react-redux application to use slim-redux-react.  
-It's of course also an example of how you can build a TodoMVC with slim-redux-react, but if you take a look at the commit history for this example you can see how I refactored it from using react-redux.  
+It's of course also an example of how you can build a TodoMVC with slim-redux-react, but if you take a look at the [commit history for this example](https://github.com/aGuyNamedJonas/slim-redux-react/commits/master/examples/todomvc) you can see how I refactored it from using react-redux.  
 
 Install: `npm install`  
 Run: `npm start`  
