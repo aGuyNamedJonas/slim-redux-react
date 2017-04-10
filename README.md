@@ -112,9 +112,9 @@ Change triggers are a `slim-redux` concept which bundles action and reducer defi
 ## <a name="motivation"></a>Motivation  
 While I love the general idea of redux in conjunction with react, I always struggled with the boilerplate overhead of react-redux quite a bit. I would even go as far as saying that redux setups pretty often were [incredibly confusing](https://github.com/aGuyNamedJonas/slim-redux#motivation) to me even though the [basic principles behind redux](http://redux.js.org/docs/introduction/ThreePrinciples.html) are incredibly simple.  
 
-What made me especially mad is that more often than not the operations performed on the redux store were incredibly simple object modifications. Especially for small changes in the store the regular overhead in react-redux was really frustratring to me.  
+What made me especially mad is that more often than not the operations performed on the redux store were incredibly simple object modifications. Especially for small changes in the store the regular overhead in react-redux was really frustrating to me.  
 
-When I read through the [core principles of redux]((http://redux.js.org/docs/introduction/ThreePrinciples.html) I realized that the way that we work with redux & react-redux can be re-packaged to a much slimmer interface without going against the basic design principles behind redux.
+When I read through the [core principles of redux](http://redux.js.org/docs/introduction/ThreePrinciples.html) I realized that the way that we work with redux & react-redux can be re-packaged to a much slimmer interface without going against the basic design principles behind redux.
 
 Ultimately what motivated me to write [slim-redux](https://github.com/aGuyNamedJonas/slim-redux) & slim-redux-react is to hopefully allow teams to much more efficiently work with redux while not having to refactor their existing state management system which is often not an option.
 
@@ -166,18 +166,184 @@ export default slimReduxReact({
 ```
 See the [complete counter example](https://github.com/aGuyNamedJonas/slim-redux-react/tree/master/examples/counter) or find out how you can [integrate asynchronous code and processing of subscription values](#heavy-light-container-components) into your slim-redux-react code.
 
+### Provider
+The [Provider component from `react-redux`](https://github.com/reactjs/react-redux/blob/master/docs/api.md#provider-store).
+
 
 <br><br>
 [^ Table of Contents ^](#toc)
 
 
 ## <a name="recipes"></a>Recipes  
+This section features recipes for how you can tackle common use cases and / or common problems that you will want to solve using slim-redux-react.
+
+### <a name="bundle-change-definitions"></a>Async code & change triggers
+The beauty of change triggers is that they are supposed to *really* trigger a change in your store. Actions and action creators (especially when working with middleware like [redux-thunk](https://github.com/gaearon/redux-thunk)) often tend to not guarantee a store change anymore.  
+
+Instead often times a change creator function or even dispatching an action will lead to asynchronous side effects before eventually triggering an action that *actually* modifies the store.  
+
+So if change triggers are designed to trigger a store change everytime they are called, how can we deal with asynchronous scenarios?  
+
+The basic idea is that you move your asynchronous code out of actions into the container components of your app which in turn call the change triggers they need:  
+
+```javascript
+import React, { Component } from 'react';
+import { slimReduxReact } from 'slim-redux-react';
+import counterChangeTriggers from './counterChangeTriggers';
+import { ComplexCounter } from './ComplexCounter';
+
+const ComplexCounterContainer = (props) => {
+  // Asynchronous code that utilizes change triggers however
+  const increaseAsync = () => setTimeout(() => props.increaseCounter(), 500);
+  const decreaseAsync = () => setTimeout(() => props.decreaseCounter(), 500);
+
+  // Modifying a subscribed to value before passing it down
+  const counter = props.counter + 100;
+
+  // Notice how we pass in a few new props but also the ones that were added by slimReduxReact()
+  var containerProps = {...props, increaseAsync, decreaseAsync, counter};
+
+  return <ComplexCounter {...containerProps}/>
+}
+
+export default slimReduxReact({
+  component: ComplexCounterContainer,
+  subscriptions: { counter: 'state'},
+  changeTriggers: counterChangeTriggers,
+});
+```
+*Code taken from the [simple-complex-containers](https://github.com/aGuyNamedJonas/slim-redux-react/tree/master/examples/simple-complex-containers) example (from [ComplexCounterContainer.js](https://github.com/aGuyNamedJonas/slim-redux-react/blob/master/examples/simple-complex-containers/src/ComplexCounterContainer.js))*
+
+In this example you can see a container component that wraps `<ComplexCounter/>` and uses the change triggers it gets from `slimReduxReact({component: ComplexCounterContainer, /*...*/})` to build the `increaseAsync()` and `decreaseAsync()` functions which then get passed to the wrapped component `<ComplexCounter/>`.  
+
+While this might be a deviation from how we usually build react-redux apps where the async code often lives inside of middleware-dependent code reacting to actions, I believe that this slim-redux-react approach is easier to work with.  
+
+To me personally it's easier to have this code directly accessible and pass it down as props directly, instead of having intercepted actions lead to asynchronous side-effects which is often somewhat hidden in the background.
+
+<br><br>
+[^ Table of Contents ^](#toc)
+
+### <a name="heavy-light-container-components"></a>Simple vs. complex container   components  
+This recipe aims at exploring a pattern which was used in the previous recipe: Simple container vs. Complex container components.
+
+*(This recipe assumes knowledge of the [presentational vs. container concept](http://redux.js.org/docs/basics/UsageWithReact.html#presentational-and-container-components) from redux)*  
+
+#### Simple Containers
+Simple containers is what you get when you default export a presentational component that you called `slimReduxReact()` on directly:  
+
+```javascript
+import React, { Component, PureComponent } from 'react';
+import { slimReduxReact } from 'slim-redux-react';
+import counterChangeTriggers from './counterChangeTriggers';
+
+// This could also be a regular or even a pure react component!
+export const Counter = (props) => (
+  <div>
+    <h1>Current Counter: {props.counter}</h1>
+    <button onClick={e => props.decreaseCounter()}>-</button>
+    <button onClick={e => props.increaseCounter()}>+</button>
+  </div>
+)
+
+export default slimReduxReact({
+  component: Counter,
+  subscriptions: { counter: 'state'},
+  changeTriggers: counterChangeTriggers,
+});
+```
+*Code taken from the [simple-complex-containers](https://github.com/aGuyNamedJonas/slim-redux-react/tree/master/examples/simple-complex-containers) example (from [SimpleCounter.js](https://github.com/aGuyNamedJonas/slim-redux-react/blob/master/examples/simple-complex-containers/src/SimpleCounter.js))*  
+
+In this example you can see a `<Counter/>` component being defined and then hooked up with slim-redux through the call of `slimReduxReact({component: Counter, /* ... */})` and exported as the default.  
+
+Through the slim nature of `slimReduxReact()` it's possible to comfortably export the container- and the presentation component from the same file.    
+
+To use the containerized version of counter, you use the default import:  
+`import CounterContainer from './Container'`. To use the presentational version of counter (i.e. for testing or re-using), you use the named import: `import { Counter } from './Container'`.  
+
+With this approach you should be able to make your code base a bit slimmer by getting around the `...Container.js` files that you'd usually create when `connect()`ing a presentational component to redux.  
+
+But what if a simple mapping to parts of the state (=subscriptions) and direct access to change triggers is not enough?  
+
+#### Complex Containers
+Sometimes you want to derive data off of subscribed-to state values or need to provide a component with asynchronous callbacks that might eventually call a change trigger.  
+
+For those use cases I hope you will find the complex container pattern useful:
+
+```javascript
+import React, { Component } from 'react';
+import { slimReduxReact } from 'slim-redux-react';
+import counterChangeTriggers from './counterChangeTriggers';
+import { ComplexCounter } from './ComplexCounter';
+
+const ComplexCounterContainer = (props) => {
+  // Asynchronous code that utilizes change triggers however
+  const increaseAsync = () => setTimeout(() => props.increaseCounter(), 500);
+  const decreaseAsync = () => setTimeout(() => props.decreaseCounter(), 500);
+
+  // Modifying a subscribed to value before passing it down
+  const counter = props.counter + 100;
+
+  // Notice how we pass in a few new props but also the ones that were added by slimReduxReact()
+  var containerProps = {...props, increaseAsync, decreaseAsync, counter};
+
+  return <ComplexCounter {...containerProps}/>
+}
+
+export default slimReduxReact({
+  component: ComplexCounterContainer,
+  subscriptions: { counter: 'state'},
+  changeTriggers: counterChangeTriggers,
+});
+```
+*Code taken from the [simple-complex-containers](https://github.com/aGuyNamedJonas/slim-redux-react/tree/master/examples/simple-complex-containers) example (from [ComplexCounterContainer.js](https://github.com/aGuyNamedJonas/slim-redux-react/blob/master/examples/simple-complex-containers/src/ComplexCounterContainer.js))*
+
+Instead of using `slimReduxReact({ /* ... */ })` directly on our presentational component (in this case `<ComplexCounter/>`) we instead create a container component that wraps our presentational component and applies `slimReduxReact()` on itself as the default export.  
+
+Through this approach we can derive data off of our subscriptions (in this case we simply increase the counter by 100) before passing them down and can also create async callbacks that ultimately trigger changes in the store (take a look at `increaseAsync()` and `decreaseAsync()`).  
+
+Note that in this pattern you can also directly pass through subscriptions and change triggers (notice how the `const containerProps = /* ... */` also include the props we get from `slimReduxReact()`).
+
+
+#### To summarize...
+Use simple containers in your app as much as possible (as I think they can help keep your code base a bit slimmer) and use complex containers for when you need to power up your subscriptions and change triggers a notch.  
+
+Also make sure to check out the full [simple-complex-containers](https://github.com/aGuyNamedJonas/slim-redux-react/tree/master/examples/simple-complex-containers) example.
+
+<br><br>
+[^ Table of Contents ^](#toc)
+
+### <a name="integrating-into-existing-apps"></a>Using slim-react-redux in existing react-redux apps  
+Glad you came here to this very recipe: This is the gospel - the good message - of slim-redux & slim-redux-react: You can use it **alongside your existing redux projects!**  
+
+If you already have a root reducer in place, just pass it into `createSlimReduxStore()`:
+```javascript
+const store = createSlimReduxStore(initialState, yourAlreadyExistingRootReducer)
+```
+slim-redux takes care of merging your already existing root reducer together with the internal slim-redux reducer.  
+
+**Got middleware?** Well guess what....  
+```javascript
+const store = createSlimReduxStore(initialState, yourAlreadyExistingRootReducer, yourAlreadyExistingMiddleware)
+```
+
+That's how easy it is :) You can actually see that middleware part in action here: [Including the redux devtools browser extension in the counter example](https://github.com/aGuyNamedJonas/slim-redux-react/blob/master/examples/counter/src/index.js#L8)
+
+Also make sure to check out the `createSlimReduxStore()` [API reference](https://github.com/aGuyNamedJonas/slim-redux#createslimreduxstoreinitialstate-existingrootreducer-enhancer).
+
+<br><br>
+[^ Table of Contents ^](#toc)
+
+### <a name="slim-redux-recipes"></a>Slim-redux recipes  
+Since slim-redux-react is the wrapper for `slim-redux`, there are even more recipes for you to check out- slim-redux specific recipes YAY! :)  
+
+#### 🢂 [slim-redux recipes](https://github.com/aGuyNamedJonas/slim-redux#recipes)
 
 <br><br>
 [^ Table of Contents ^](#toc)
 
 
 ## <a name="examples"></a>Examples  
+#### 🢂 [Examples folder](https://github.com/aGuyNamedJonas/slim-redux-react/tree/master/examples)
 
 <br><br>
 [^ Table of Contents ^](#toc)
