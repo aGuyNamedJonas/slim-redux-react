@@ -9,7 +9,7 @@
 
 export default {
   addTodo: {
-    actionType: 'ADD_TODO'
+    actionType: 'ADD_TODO',
     reducer: (state, payload) => ({
       ...state,
       todos: [
@@ -23,7 +23,7 @@ export default {
     })
   },
   deleteTodo: {
-    actionType: 'DELETE_TODO'
+    actionType: 'DELETE_TODO',
     reducer: (state, payload) => ({
       ...state,
       todos: state.todos.filter(todo =>
@@ -32,7 +32,7 @@ export default {
     })
   },
   editTodo: {
-    actionType: 'EDIT_TODO'
+    actionType: 'EDIT_TODO',
     reducer: (state, payload) => ({
       ...state,
       todos: state.todos.map(todo =>
@@ -43,7 +43,7 @@ export default {
     })
   },
   completeTodo: {
-    actionType: 'COMPLETE_TODO'
+    actionType: 'COMPLETE_TODO',
     reducer: (state, payload) => ({
       ...state,
       todos: state.todos.map(todo =>
@@ -54,7 +54,7 @@ export default {
     })
   },
   completeAll: {
-    actionType: 'COMPLETE_ALL'
+    actionType: 'COMPLETE_ALL',
     reducer: (state, payload) => {
       const areAllMarked = state.todos.every(todo => todo.completed)
       return ({
@@ -67,7 +67,7 @@ export default {
     }
   },
   clearCompleted: {
-    actionType: 'CLEAR_COMPLETED'
+    actionType: 'CLEAR_COMPLETED',
     reducer: (state, payload) => ({
       ...state,
       todos: state.todos.filter(todo => todo.completed === false),

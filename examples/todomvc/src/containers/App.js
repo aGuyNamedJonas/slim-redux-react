@@ -4,41 +4,29 @@ import { connect } from 'react-redux'
 import Header from '../components/Header'
 import MainSection from '../components/MainSection'
 import * as TodoActions from '../actions'
-import { slimReduxReact } from 'slim-redux-react'
+import TodoChangeTriggerDefs from '../changeTriggers'
 
 // NEW: Import slim-redux-react
 import { slimReduxReact } from 'slim-redux-react'
 
-const App = ({todos, actions}) => (
-  <div>
-    <Header addTodo={actions.addTodo} />
-    <MainSection todos={todos} actions={actions} />
-  </div>
-)
+const App = ({todos, addTodo, deleteTodo, editTodo, completeTodo, completeAll, clearComplete}) => {
+  const actions = { addTodo, deleteTodo, editTodo, completeTodo, completeAll, clearComplete }
+
+  return (
+    <div>
+      <Header addTodo={addTodo} />
+      <MainSection todos={todos} actions={actions} />
+    </div>
+  )
+}
 
 App.propTypes = {
   todos: PropTypes.array.isRequired,
-  actions: PropTypes.object.isRequired
 }
 
-// OLD: map dispatch to props
-// const mapStateToProps = state => ({
-//   todos: state.todos
-// })
 
-const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(TodoActions, dispatch)
-})
-
-
-// NEW: pass in the todos as slim-redux-react subscriptions
-const AppContainer = slimReduxReact({
+export default slimReduxReact({
   component: App,
   subscriptions: { todos: 'state.todos' },
+  changeTriggers: TodoChangeTriggerDefs,
 })
-
-export default connect(
-  /*mapStateToProps,*/
-  null,
-  mapDispatchToProps
-)(AppContainer)

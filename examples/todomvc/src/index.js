@@ -22,7 +22,7 @@ const initialState = {
 }
 
 // NEW: createSlimReduxStore() takes an initialState, an existing root reducer (or null) and in this case middleware that connects us to the redux-devtools browser extension
-const store = createSlimReduxStore(initialState, reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+const store = createSlimReduxStore(initialState, null, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
 render(
   <Provider store={store}>
