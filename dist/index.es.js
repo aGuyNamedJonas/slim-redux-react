@@ -8,6 +8,7 @@ import _Object$keys from 'babel-runtime/core-js/object/keys';
 import _JSON$stringify from 'babel-runtime/core-js/json/stringify';
 import React from 'react';
 import { createSelectorCreator } from 'reselect';
+import { Provider } from 'react-redux';
 
 /*
   Prototyping the custom selector to notify us about updates
@@ -155,5 +156,5 @@ function slimReduxReact(params) {
   return SlimReduxConnector;
 }
 
-export { slimReduxReact };
+export { slimReduxReact, Provider };
 //# sourceMappingURL=index.es.js.map

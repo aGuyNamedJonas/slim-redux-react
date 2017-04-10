@@ -14,6 +14,7 @@ var _Object$keys = _interopDefault(require('babel-runtime/core-js/object/keys'))
 var _JSON$stringify = _interopDefault(require('babel-runtime/core-js/json/stringify'));
 var React = _interopDefault(require('react'));
 var reselect = require('reselect');
+var reactRedux = require('react-redux');
 
 /*
   Prototyping the custom selector to notify us about updates
@@ -162,4 +163,5 @@ function slimReduxReact(params) {
 }
 
 exports.slimReduxReact = slimReduxReact;
+exports.Provider = reactRedux.Provider;
 //# sourceMappingURL=index.js.map

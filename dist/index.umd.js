@@ -1,8 +1,8 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('babel-runtime/helpers/extends'), require('babel-runtime/core-js/object/get-prototype-of'), require('babel-runtime/helpers/classCallCheck'), require('babel-runtime/helpers/createClass'), require('babel-runtime/helpers/possibleConstructorReturn'), require('babel-runtime/helpers/inherits'), require('babel-runtime/core-js/object/keys'), require('babel-runtime/core-js/json/stringify'), require('react'), require('reselect')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'babel-runtime/helpers/extends', 'babel-runtime/core-js/object/get-prototype-of', 'babel-runtime/helpers/classCallCheck', 'babel-runtime/helpers/createClass', 'babel-runtime/helpers/possibleConstructorReturn', 'babel-runtime/helpers/inherits', 'babel-runtime/core-js/object/keys', 'babel-runtime/core-js/json/stringify', 'react', 'reselect'], factory) :
-  (factory((global.slim-redux-react = global.slim-redux-react || {}),global._extends,global._Object$getPrototypeOf,global._classCallCheck,global._createClass,global._possibleConstructorReturn,global._inherits,global._Object$keys,global._JSON$stringify,global.React,global.reselect));
-}(this, (function (exports,_extends,_Object$getPrototypeOf,_classCallCheck,_createClass,_possibleConstructorReturn,_inherits,_Object$keys,_JSON$stringify,React,reselect) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('babel-runtime/helpers/extends'), require('babel-runtime/core-js/object/get-prototype-of'), require('babel-runtime/helpers/classCallCheck'), require('babel-runtime/helpers/createClass'), require('babel-runtime/helpers/possibleConstructorReturn'), require('babel-runtime/helpers/inherits'), require('babel-runtime/core-js/object/keys'), require('babel-runtime/core-js/json/stringify'), require('react'), require('reselect'), require('react-redux')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'babel-runtime/helpers/extends', 'babel-runtime/core-js/object/get-prototype-of', 'babel-runtime/helpers/classCallCheck', 'babel-runtime/helpers/createClass', 'babel-runtime/helpers/possibleConstructorReturn', 'babel-runtime/helpers/inherits', 'babel-runtime/core-js/object/keys', 'babel-runtime/core-js/json/stringify', 'react', 'reselect', 'react-redux'], factory) :
+  (factory((global.slim-redux-react = global.slim-redux-react || {}),global._extends,global._Object$getPrototypeOf,global._classCallCheck,global._createClass,global._possibleConstructorReturn,global._inherits,global._Object$keys,global._JSON$stringify,global.React,global.reselect,global.reactRedux));
+}(this, (function (exports,_extends,_Object$getPrototypeOf,_classCallCheck,_createClass,_possibleConstructorReturn,_inherits,_Object$keys,_JSON$stringify,React,reselect,reactRedux) { 'use strict';
 
 _extends = 'default' in _extends ? _extends['default'] : _extends;
 _Object$getPrototypeOf = 'default' in _Object$getPrototypeOf ? _Object$getPrototypeOf['default'] : _Object$getPrototypeOf;
@@ -161,6 +161,7 @@ function slimReduxReact(params) {
 }
 
 exports.slimReduxReact = slimReduxReact;
+exports.Provider = reactRedux.Provider;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
