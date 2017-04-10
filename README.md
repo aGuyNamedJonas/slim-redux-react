@@ -16,6 +16,7 @@ ____
 * [Recipes](#recipes)
   * [Async code & change triggers](#bundle-change-definitions)
   * [Simple vs. complex container components](#heavy-light-container-components)
+  * [Using slim-react-redux in existing react-redux apps](#integrating-into-existing-apps)
 * [Examples](#examples)
 * [Future Development](#future-development)
 * [Contribute](#contribute)
