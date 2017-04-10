@@ -5,6 +5,9 @@ import Header from '../components/Header'
 import MainSection from '../components/MainSection'
 import * as TodoActions from '../actions'
 
+// NEW: Import slim-redux-react
+import { slimReduxReact } from 'slim-redux-react'
+
 const App = ({todos, actions}) => (
   <div>
     <Header addTodo={actions.addTodo} />
@@ -17,15 +20,23 @@ App.propTypes = {
   actions: PropTypes.object.isRequired
 }
 
-const mapStateToProps = state => ({
-  todos: state.todos
-})
+// OLD: map dispatch to props
+// const mapStateToProps = state => ({
+//   todos: state.todos
+// })
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(TodoActions, dispatch)
 })
 
+// NEW: pass in the todos as slim-redux-react subscriptions
+const AppContainer = slimReduxReact({
+  component: App,
+  subscriptions: { todos: 'state.todos' },
+})
+
 export default connect(
-  mapStateToProps,
+  /*mapStateToProps,*/
+  null,
   mapDispatchToProps
-)(App)
+)(AppContainer)
