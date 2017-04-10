@@ -9,8 +9,8 @@ import TodoChangeTriggerDefs from '../changeTriggers'
 // NEW: Import slim-redux-react
 import { slimReduxReact } from 'slim-redux-react'
 
-const App = ({todos, addTodo, deleteTodo, editTodo, completeTodo, completeAll, clearComplete}) => {
-  const actions = { addTodo, deleteTodo, editTodo, completeTodo, completeAll, clearComplete }
+const App = ({todos, addTodo, deleteTodo, editTodo, completeTodo, completeAll, clearCompleted }) => {
+  const actions = { addTodo, deleteTodo, editTodo, completeTodo, completeAll, clearCompleted }
 
   return (
     <div>
