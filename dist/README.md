@@ -34,8 +34,7 @@ To get started, have a look at the below code which is directly taken from the [
 import React from 'react';
 import ReactDOM from 'react-dom';
 import CounterContainer from './Counter';
-import { createSlimReduxStore } from 'slim-redux';
-import { Provider } from 'react-redux';
+import { createSlimReduxStore, Provider } from 'slim-redux';
 
 // Create the store, give it an initial state of 0 (and make redux store visible in redux-devtools browser extension)
 const store = createSlimReduxStore(0, null, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
@@ -175,7 +174,7 @@ The [Provider component from `react-redux`](https://github.com/reactjs/react-red
 
 
 ## <a name="recipes"></a>Recipes  
-This section features recipes for how you can tackle common use cases and / or common problems that you will want to solve using slim-redux-react.
+This section features ideas on how to solve certain challenges when working with slim-redux-react as well as a few suggestions on how to make the most of slim-redux-react.
 
 ### <a name="bundle-change-definitions"></a>Async code & change triggers
 The beauty of change triggers is that they are supposed to *really* trigger a change in your store. Actions and action creators (especially when working with middleware like [redux-thunk](https://github.com/gaearon/redux-thunk)) often tend to not guarantee a store change anymore.  

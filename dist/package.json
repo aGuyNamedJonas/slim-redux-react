@@ -1,8 +1,16 @@
 {
   "author": "Jonas Peeck <jonas.peeck@googlemail.com> (https://twitter.com/aguynamedjonas)",
   "name": "slim-redux-react",
-  "description": "Slim-redux bindings for react. Uses a simple subscribe semantics + simple-redux's change triggers to make working with redux+react much more straight-forward.",
-  "version": "0.0.6",
+  "description": "Official react bindings for slim-redux",
+  "keywords": [
+    "react",
+    "reactjs",
+    "redux",
+    "flux",
+    "state",
+    "fsa"
+  ],
+  "version": "0.0.8",
   "license": "MIT",
   "repository": {
     "type": "git",
