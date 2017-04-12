@@ -5,8 +5,8 @@
   "dependencies": {
     "react": "^15.5.3",
     "react-dom": "^15.5.3",
-    "slim-redux": "0.0.6",
-    "slim-redux-react": "0.0.5"
+    "slim-redux": "0.0.10",
+    "slim-redux-react": "0.0.9"
   },
   "devDependencies": {
     "react-scripts": "0.9.5"

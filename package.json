@@ -2,8 +2,15 @@
   "author": "Jonas Peeck <jonas.peeck@googlemail.com> (https://twitter.com/aguynamedjonas)",
   "name": "slim-redux-react",
   "description": "Official react bindings for slim-redux",
-  "keywords": ["react", "reactjs", "redux", "flux", "state", "fsa"],
-  "version": "0.0.8",
+  "keywords": [
+    "react",
+    "reactjs",
+    "redux",
+    "flux",
+    "state",
+    "fsa"
+  ],
+  "version": "0.0.9",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -28,6 +35,7 @@
   "dependencies": {
     "babel-runtime": "^6.11.6",
     "react": "^15.4.2",
+    "react-redux": "^5.0.4",
     "redux": "^3.6.0",
     "reselect": "^3.0.0"
   },
