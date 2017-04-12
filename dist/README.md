@@ -1,5 +1,8 @@
 slim-redux-react
 ================
+>  🢂 Watch on Youtube: [**slim-redux-react in action (DEMO) [45 min]**](https://youtu.be/JvN2Jr9dMSE)  
+> 🢂 Read on Medium: [**Introducing slim-redux-react — a faster, more concise way of building redux based react apps [6 min]**](https://medium.com/@aGuyNamedJonas/introducing-slim-redux-react-a-faster-more-concise-way-of-building-redux-based-react-apps-bed14f7c88bf)
+
 
 Official react bindings for [slim-redux](https://github.com/aGuyNamedJonas/slim-redux) which gives components access to the store through `subscriptions` and lets them modify the state through `change triggers`.
 
