@@ -1,7 +1,4 @@
-import React, { Component, PureComponent } from 'react';
-import { slimReduxReact } from 'slim-redux-react';
-// import { Counter } from './SimpleCounter';
-import counterChangeTriggers from './counterChangeTriggers';
+import React from 'react';
 
 export const ComplexCounter = (props) => (
   <div>

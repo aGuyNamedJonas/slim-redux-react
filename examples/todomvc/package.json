@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "prop-types": "^15.5.8",
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
     "react-redux": "^5.0.3",
