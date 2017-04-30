@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`full 1`] = `
+<div>
+  <div>
+    <h1>
+      0
+    </h1>
+    <button
+      onClick={[Function]}
+    >
+      INCREASE COUNTER
+    </button>
+  </div>
+</div>
+`;
+
+exports[`no-change-triggers 1`] = `
+<div>
+  <div>
+    <h1>
+      0
+    </h1>
+    <button
+      onClick={[Function]}
+    >
+      INCREASE COUNTER
+    </button>
+  </div>
+</div>
+`;
+
+exports[`no-subscriptions 1`] = `
+<div>
+  <div>
+    <h1 />
+    <button
+      onClick={[Function]}
+    >
+      INCREASE COUNTER
+    </button>
+  </div>
+</div>
+`;
