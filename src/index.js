@@ -1,7 +1,7 @@
-import slimReduxReact from './slimReduxReact'
+import { connect } from './connect';
 import { Provider } from 'react-redux';
 
 export {
-  slimReduxReact,
+  connect,
   Provider,
 }

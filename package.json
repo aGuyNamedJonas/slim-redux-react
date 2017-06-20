@@ -35,7 +35,7 @@
   "dependencies": {
     "babel-runtime": "^6.11.6",
     "react": "^15.4.2",
-    "react-redux": "^5.0.4",
+    "react-redux": "^5.0.5",
     "redux": "^3.6.0",
     "reselect": "^3.0.0"
   },
@@ -43,10 +43,12 @@
     "babel-cli": "^6.16.0",
     "babel-core": "^6.17.0",
     "babel-eslint": "^7.0.0",
+    "babel-jest": "^20.0.3",
     "babel-plugin-transform-runtime": "^6.15.0",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-0": "^6.16.0",
+    "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.16.3",
     "chai": "^4.0.0-canary.1",
     "coveralls": "^2.11.14",
@@ -55,6 +57,7 @@
     "eslint-config-airbnb-base": "^10.0.1",
     "eslint-plugin-import": "^2.2.0",
     "istanbul": "^1.1.0-alpha.1",
+    "jest": "^20.0.4",
     "mocha": "^3.1.2",
     "rollup": "^0.36.3",
     "rollup-plugin-babel": "^2.6.1",
@@ -62,13 +65,16 @@
   },
   "scripts": {
     "lint": "eslint src test tools",
-    "test": "mocha --compilers js:babel-register",
-    "test:watch": "mocha --compilers js:babel-register --reporter min --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "test:cover": "babel-node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "build": "node tools/build",
     "prepublish": "npm run build",
     "publish:docs": "easystatic deploy docs --repo kriasoft/babel-starter-kit",
     "start": "easystatic start docs"
+  },
+  "jest": {
+    "verbose": true
   }
 }
