@@ -1,8 +1,9 @@
 import React from 'react';
+import { error as _err } from './util';
 
 export function connect(component, subsAndCalcs, changeTriggers){
-    const displayName = WrappedComponent.displayName || WrappedComponent.name || 'SlimReduxReact',
-          error       = msg => _err(`${displayName}`, msg);
+    const displayName = component.displayName || component.name || 'SlimReduxReact',
+          error       = msg => _err(`<${displayName}/>`, msg);
 
     class SlimReduxConnector extends React.Component {
         constructor(props, context){

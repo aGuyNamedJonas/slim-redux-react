@@ -1,0 +1,157 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`connect() (default behavior) returns a react component 1`] = `
+ShallowWrapper {
+  "complexSelector": ComplexSelector {
+    "buildPredicate": [Function],
+    "childrenOfNode": [Function],
+    "findWhereUnwrapped": [Function],
+  },
+  "length": 1,
+  "node": <SlimReduxConnectorBasicComponent />,
+  "nodes": Array [
+    <SlimReduxConnectorBasicComponent />,
+  ],
+  "options": Object {},
+  "renderer": ReactShallowRenderer {
+    "_instance": ShallowComponentWrapper {
+      "_calledComponentWillUnmount": false,
+      "_compositeType": 0,
+      "_context": Object {},
+      "_currentElement": <Provider
+        store={
+                Object {
+                        "dispatch": [Function],
+                        "getState": [Function],
+                        "registerChangeTrigger": [Function],
+                        "replaceReducer": [Function],
+                        "slimReduxChangeTriggers": Object {
+                          "RESET_STORE": Object {
+                            "focusSubString": null,
+                            "getFocusState": null,
+                            "reducer": [Function],
+                            "setFocusState": null,
+                          },
+                        },
+                        "slimReduxOptions": Object {
+                          "disableActionDispatch": false,
+                          "disableGlobalStore": false,
+                        },
+                        "subscribe": [Function],
+                        Symbol(observable): [Function],
+                      }
+        }
+>
+        <SlimReduxConnectorBasicComponent />
+</Provider>,
+      "_debugID": 1,
+      "_hostContainerInfo": null,
+      "_hostParent": null,
+      "_instance": Provider {
+        "_reactInternalInstance": [Circular],
+        "context": Object {},
+        "props": Object {
+          "children": <SlimReduxConnectorBasicComponent />,
+          "store": Object {
+            "dispatch": [Function],
+            "getState": [Function],
+            "registerChangeTrigger": [Function],
+            "replaceReducer": [Function],
+            "slimReduxChangeTriggers": Object {
+              "RESET_STORE": Object {
+                "focusSubString": null,
+                "getFocusState": null,
+                "reducer": [Function],
+                "setFocusState": null,
+              },
+            },
+            "slimReduxOptions": Object {
+              "disableActionDispatch": false,
+              "disableGlobalStore": false,
+            },
+            "subscribe": [Function],
+            Symbol(observable): [Function],
+          },
+        },
+        "refs": Object {},
+        "state": null,
+        "store": Object {
+          "dispatch": [Function],
+          "getState": [Function],
+          "registerChangeTrigger": [Function],
+          "replaceReducer": [Function],
+          "slimReduxChangeTriggers": Object {
+            "RESET_STORE": Object {
+              "focusSubString": null,
+              "getFocusState": null,
+              "reducer": [Function],
+              "setFocusState": null,
+            },
+          },
+          "slimReduxOptions": Object {
+            "disableActionDispatch": false,
+            "disableGlobalStore": false,
+          },
+          "subscribe": [Function],
+          Symbol(observable): [Function],
+        },
+        "updater": Object {
+          "enqueueCallback": [Function],
+          "enqueueCallbackInternal": [Function],
+          "enqueueElementInternal": [Function],
+          "enqueueForceUpdate": [Function],
+          "enqueueReplaceState": [Function],
+          "enqueueSetState": [Function],
+          "isMounted": [Function],
+          "validateCallback": [Function],
+        },
+      },
+      "_mountOrder": 1,
+      "_pendingCallbacks": null,
+      "_pendingElement": null,
+      "_pendingForceUpdate": false,
+      "_pendingReplaceState": false,
+      "_pendingStateQueue": null,
+      "_renderedComponent": NoopInternalComponent {
+        "_currentElement": <SlimReduxConnectorBasicComponent />,
+        "_debugID": 2,
+        "_renderedOutput": <SlimReduxConnectorBasicComponent />,
+      },
+      "_renderedNodeType": 1,
+      "_rootNodeID": 0,
+      "_topLevelWrapper": null,
+      "_updateBatchNumber": null,
+      "_warnedAboutRefsInRender": false,
+    },
+    "getRenderOutput": [Function],
+    "render": [Function],
+  },
+  "root": [Circular],
+  "unrendered": <Provider
+    store={
+        Object {
+            "dispatch": [Function],
+            "getState": [Function],
+            "registerChangeTrigger": [Function],
+            "replaceReducer": [Function],
+            "slimReduxChangeTriggers": Object {
+              "RESET_STORE": Object {
+                "focusSubString": null,
+                "getFocusState": null,
+                "reducer": [Function],
+                "setFocusState": null,
+              },
+            },
+            "slimReduxOptions": Object {
+              "disableActionDispatch": false,
+              "disableGlobalStore": false,
+            },
+            "subscribe": [Function],
+            Symbol(observable): [Function],
+          }
+    }
+>
+    <SlimReduxConnectorBasicComponent />
+</Provider>,
+}
+`;
