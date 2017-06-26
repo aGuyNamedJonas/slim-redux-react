@@ -1,5 +1,8 @@
 slim-redux-react
 ================
+
+[![CircleCI Status](https://circleci.com/gh/aGuyNamedJonas/slim-redux-react.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/aGuyNamedJonas/slim-redux-react)
+
 >  🢂 Watch on Youtube: [**slim-redux-react in action (DEMO) [45 min]**](https://youtu.be/JvN2Jr9dMSE)  
 > 🢂 Read on Medium: [**Introducing slim-redux-react — a faster, more concise way of building redux based react apps [6 min]**](https://medium.com/@aGuyNamedJonas/introducing-slim-redux-react-a-faster-more-concise-way-of-building-redux-based-react-apps-bed14f7c88bf)
 

@@ -1,167 +1,139 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('babel-runtime/helpers/extends'), require('babel-runtime/core-js/object/get-prototype-of'), require('babel-runtime/helpers/classCallCheck'), require('babel-runtime/helpers/createClass'), require('babel-runtime/helpers/possibleConstructorReturn'), require('babel-runtime/helpers/inherits'), require('babel-runtime/core-js/object/keys'), require('babel-runtime/core-js/json/stringify'), require('react'), require('reselect'), require('react-redux')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'babel-runtime/helpers/extends', 'babel-runtime/core-js/object/get-prototype-of', 'babel-runtime/helpers/classCallCheck', 'babel-runtime/helpers/createClass', 'babel-runtime/helpers/possibleConstructorReturn', 'babel-runtime/helpers/inherits', 'babel-runtime/core-js/object/keys', 'babel-runtime/core-js/json/stringify', 'react', 'reselect', 'react-redux'], factory) :
-  (factory((global.slim-redux-react = global.slim-redux-react || {}),global._extends,global._Object$getPrototypeOf,global._classCallCheck,global._createClass,global._possibleConstructorReturn,global._inherits,global._Object$keys,global._JSON$stringify,global.React,global.reselect,global.reactRedux));
-}(this, (function (exports,_extends,_Object$getPrototypeOf,_classCallCheck,_createClass,_possibleConstructorReturn,_inherits,_Object$keys,_JSON$stringify,React,reselect,reactRedux) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('babel-runtime/helpers/defineProperty'), require('babel-runtime/helpers/extends'), require('babel-runtime/core-js/object/keys'), require('babel-runtime/core-js/object/get-prototype-of'), require('babel-runtime/helpers/classCallCheck'), require('babel-runtime/helpers/createClass'), require('babel-runtime/helpers/possibleConstructorReturn'), require('babel-runtime/helpers/inherits'), require('react'), require('react-redux'), require('slim-redux')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'babel-runtime/helpers/defineProperty', 'babel-runtime/helpers/extends', 'babel-runtime/core-js/object/keys', 'babel-runtime/core-js/object/get-prototype-of', 'babel-runtime/helpers/classCallCheck', 'babel-runtime/helpers/createClass', 'babel-runtime/helpers/possibleConstructorReturn', 'babel-runtime/helpers/inherits', 'react', 'react-redux', 'slim-redux'], factory) :
+  (factory((global.slim-redux-react = global.slim-redux-react || {}),global._defineProperty,global._extends,global._Object$keys,global._Object$getPrototypeOf,global._classCallCheck,global._createClass,global._possibleConstructorReturn,global._inherits,global.React,global.reactRedux,global.slimRedux));
+}(this, (function (exports,_defineProperty,_extends,_Object$keys,_Object$getPrototypeOf,_classCallCheck,_createClass,_possibleConstructorReturn,_inherits,React,reactRedux,slimRedux) { 'use strict';
 
+_defineProperty = 'default' in _defineProperty ? _defineProperty['default'] : _defineProperty;
 _extends = 'default' in _extends ? _extends['default'] : _extends;
+_Object$keys = 'default' in _Object$keys ? _Object$keys['default'] : _Object$keys;
 _Object$getPrototypeOf = 'default' in _Object$getPrototypeOf ? _Object$getPrototypeOf['default'] : _Object$getPrototypeOf;
 _classCallCheck = 'default' in _classCallCheck ? _classCallCheck['default'] : _classCallCheck;
 _createClass = 'default' in _createClass ? _createClass['default'] : _createClass;
 _possibleConstructorReturn = 'default' in _possibleConstructorReturn ? _possibleConstructorReturn['default'] : _possibleConstructorReturn;
 _inherits = 'default' in _inherits ? _inherits['default'] : _inherits;
-_Object$keys = 'default' in _Object$keys ? _Object$keys['default'] : _Object$keys;
-_JSON$stringify = 'default' in _JSON$stringify ? _JSON$stringify['default'] : _JSON$stringify;
 React = 'default' in React ? React['default'] : React;
 
-/*
-  Prototyping the custom selector to notify us about updates
-*/
-
-function defaultEqualityCheck(a, b) {
-  return a === b;
-}
-
-function areArgumentsShallowlyEqual(equalityCheck, prev, next) {
-  if (prev === null || next === null || prev.length !== next.length) {
-    return false;
-  }
-
-  // Do this in a for loop (and not a `forEach` or an `every`) so we can determine equality as fast as possible.
-  var length = prev.length;
-  for (var i = 0; i < length; i++) {
-    if (!equalityCheck(prev[i], next[i])) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-function defaultMemoize(func) {
-  var equalityCheck = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultEqualityCheck;
-
-  var lastArgs = null;
-  var lastResult = null;
-  // we reference arguments instead of spreading them for performance reasons
-  return function () {
-    var changed = false;
-
-    if (!areArgumentsShallowlyEqual(equalityCheck, lastArgs, arguments)) {
-      // apply arguments instead of spreading for performance.
-      lastResult = func.apply(null, arguments);
-      changed = true;
-    }
-
-    lastArgs = arguments;
-
-    return {
-      hasChanged: changed,
-      data: lastResult
-    };
-  };
-}
-
-var getNotifyingSelectorCreator = function getNotifyingSelectorCreator() {
-  return reselect.createSelectorCreator(defaultMemoize);
+var error = function error(location, msg) {
+  throw new Error("*** Error in " + location + ": " + msg);
 };
 
-function slimReduxReact(params) {
-  var WrappedComponent = params.component;
-  var changeTriggers = params.changeTriggers || {};
-  var subscriptions = params.subscriptions || {};
+function connect(component, subsAndCalcs, changeTriggers) {
+    var displayName = component.displayName || component.name || 'SlimReduxReact',
+        error$$1 = function error$$1(msg) {
+        return error('<' + displayName + '/>', msg);
+    };
 
-  var displayName = WrappedComponent.displayName || WrappedComponent.name || '';
+    var SlimReduxConnector = function (_React$Component) {
+        _inherits(SlimReduxConnector, _React$Component);
 
-  // Returns the appropriate part of the state for a string like "state.todo.active"
-  var _getStateFromSubscriptionString = function _getStateFromSubscriptionString(subscriptionString, state) {
-    var subStringParts = subscriptionString.split('.');
-    var currentPath = 'state';
-    var stateFromString = state;
+        function SlimReduxConnector(props, context) {
+            _classCallCheck(this, SlimReduxConnector);
 
-    for (var i = 1; i < subStringParts.length; i++) {
-      var nextPath = subStringParts[i];
-      currentPath += '.' + nextPath;
+            // Check for store instance
+            var _this = _possibleConstructorReturn(this, (SlimReduxConnector.__proto__ || _Object$getPrototypeOf(SlimReduxConnector)).call(this, props));
 
-      if (!(nextPath in stateFromString)) console.error('*** Error in slimReduxReact container ' + displayName + ':\nCannot find path "' + currentPath + ' in state.\nState: ' + _JSON$stringify(state, null, 2) + '"');
+            if (!context.store) error$$1('No store found in context. Did you forget to wrap your code in the <Provider> component?');
 
-      stateFromString = stateFromString[nextPath];
-    }
+            var store = context.store;
 
-    return stateFromString;
-  };
+            // Setup initial state
+            var initialState = {};
 
-  // Retrieves the data for the subscriptions, first part of the subscription selector
-  var getSubscriptions = function getSubscriptions(state) {
-    var storeSubscriptions = {};
-    _Object$keys(subscriptions).map(function (subscription) {
-      return storeSubscriptions[subscription] = _getStateFromSubscriptionString(subscriptions[subscription], state);
-    });
-    return storeSubscriptions;
-  };
+            // Go through subscriptions and calculations and set them up to feed into the state
+            _Object$keys(subsAndCalcs).map(function (key) {
+                var stateKey = key;
 
-  // Create subscrption selector
-  var createNotifyingSelector = getNotifyingSelectorCreator();
-  var checkSubscriptionSelector = createNotifyingSelector(getSubscriptions, function (subscriptionData) {
-    return subscriptionData;
-  });
+                // Create a closure so that the stateKey is still available after this setup code has executed
+                (function () {
+                    var _this2 = this;
 
-  // Create change creators    TODO: change creators could also be functions to mock stuff!!
+                    // Hook it up to the state
+                    var getInitialValue = subsAndCalcs[key](function (value) {
+                        _this2.setState(_extends({}, _this2.state, _defineProperty({}, stateKey, value)));
+                    }, store);
 
+                    // Get initial state
+                    initialState[key] = getInitialValue();
+                })();
+            });
 
-  var SlimReduxConnector = function (_React$Component) {
-    _inherits(SlimReduxConnector, _React$Component);
+            _this.wrappedChangeTriggers = {};
 
-    function SlimReduxConnector(props, context) {
-      _classCallCheck(this, SlimReduxConnector);
+            // Go through change triggers and wrap them to use the current store instance
+            _Object$keys(changeTriggers).map(function (key) {
+                wrappedChangeTriggers[key] = function () {
+                    // Creating a new closure to preserve the store instance
+                    var ct = changeTriggers[key];
 
-      var _this = _possibleConstructorReturn(this, (SlimReduxConnector.__proto__ || _Object$getPrototypeOf(SlimReduxConnector)).call(this, props));
+                    // We only pass down the parameters to the change trigger if the change trigger accepts any
 
-      if (!context.store) console.error('*** Error in SlimReduxConnector component: No store found in context. Did you forget to wrap your code in the <Provider> component?');
+                    for (var _len = arguments.length, params = Array(_len), _key = 0; _key < _len; _key++) {
+                        params[_key] = arguments[_key];
+                    }
 
-      var initialSubscriptionState = checkSubscriptionSelector(context.store.getState());
-      _this.state = _extends({}, initialSubscriptionState.data);
+                    if (ct.length === 1) ct(store);else ct.apply(undefined, params.concat([store]));
+                };
+            });
+            return _this;
+        }
 
-      _this.registeredChangeTriggers = {};
-      _Object$keys(changeTriggers).map(function (changeTrigger) {
-        return _this.registeredChangeTriggers[changeTrigger] = context.store.createChangeTrigger(changeTriggers[changeTrigger]);
-      });
-      return _this;
-    }
+        _createClass(SlimReduxConnector, [{
+            key: 'componentDidMount',
+            value: function componentDidMount() {}
+        }, {
+            key: 'render',
+            value: function render() {
+                return React.createElement(WrappedComponent, _extends({}, this.props, this.wrappedChangeTriggers, this.state));
+            }
+        }]);
 
-    _createClass(SlimReduxConnector, [{
-      key: 'componentDidMount',
-      value: function componentDidMount() {
-        var _this2 = this;
+        return SlimReduxConnector;
+    }(React.Component);
 
-        // SUBSCRIBE THIS MOTHERFUCKER TO SUBSCRIPTION CHANGES!
-        this.context.store.subscribe(function () {
-          var subscriptionState = checkSubscriptionSelector(_this2.context.store.getState());
+    SlimReduxConnector.displayName = 'SlimReduxConnector' + displayName;
 
-          if (subscriptionState.hasChanged) _this2.setState(_extends({}, _this2.state, subscriptionState.data));
-        });
-      }
-    }, {
-      key: 'render',
-      value: function render() {
-        return React.createElement(WrappedComponent, _extends({}, this.props, this.registeredChangeTriggers, this.state));
-      }
-    }]);
+    SlimReduxConnector.contextTypes = {
+        store: React.PropTypes.object
+    };
 
     return SlimReduxConnector;
-  }(React.Component);
-
-  SlimReduxConnector.displayName = 'SlimReduxConnector' + displayName;
-
-  SlimReduxConnector.contextTypes = {
-    store: React.PropTypes.object
-  };
-
-  return SlimReduxConnector;
 }
 
-exports.slimReduxReact = slimReduxReact;
+function subscription$1(subscription$$1) {
+    var createSubscription = function createSubscription(changeCallback, storeArg) {
+        return slimRedux.subscription(subscription$$1, changeCallback, storeArg);
+    };
+    return createSubscription;
+}
+
+function calculation$1(subscriptions, calcFunction) {
+    var createCalculation = function createCalculation(changeCallback, storeArg) {
+        return slimRedux.calculation(subscriptions, calcFunction, changeCallback, storeArg);
+    };
+    return createCalculation;
+}
+
+function changeTrigger$1(actionType, reducer, focusSubString) {
+    var createChangeTrigger = function createChangeTrigger(actionType, reducer, focusSubString) {
+        return slimRedux.changeTrigger(actionType, reducer, focusSubString);
+    };
+    return createChangeTrigger;
+}
+
+function asyncChangeTrigger(actionType, reducer, focusSubString) {
+    var createAsyncChangeTrigger = function createAsyncChangeTrigger(actionType, reducer, focusSubString) {
+        return slimReduxChangeTrigger(actionType, reducer, focusSubString);
+    };
+    return createAsyncChangeTrigger;
+}
+
+exports.connect = connect;
 exports.Provider = reactRedux.Provider;
+exports.subscription = subscription$1;
+exports.calculation = calculation$1;
+exports.changeTrigger = changeTrigger$1;
+exports.asyncChangeTrigger = asyncChangeTrigger;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

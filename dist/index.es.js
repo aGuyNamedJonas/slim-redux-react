@@ -1,160 +1,128 @@
+import _defineProperty from 'babel-runtime/helpers/defineProperty';
 import _extends from 'babel-runtime/helpers/extends';
+import _Object$keys from 'babel-runtime/core-js/object/keys';
 import _Object$getPrototypeOf from 'babel-runtime/core-js/object/get-prototype-of';
 import _classCallCheck from 'babel-runtime/helpers/classCallCheck';
 import _createClass from 'babel-runtime/helpers/createClass';
 import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructorReturn';
 import _inherits from 'babel-runtime/helpers/inherits';
-import _Object$keys from 'babel-runtime/core-js/object/keys';
-import _JSON$stringify from 'babel-runtime/core-js/json/stringify';
 import React from 'react';
-import { createSelectorCreator } from 'reselect';
 import { Provider } from 'react-redux';
+import { calculation, changeTrigger, subscription } from 'slim-redux';
 
-/*
-  Prototyping the custom selector to notify us about updates
-*/
-
-function defaultEqualityCheck(a, b) {
-  return a === b;
-}
-
-function areArgumentsShallowlyEqual(equalityCheck, prev, next) {
-  if (prev === null || next === null || prev.length !== next.length) {
-    return false;
-  }
-
-  // Do this in a for loop (and not a `forEach` or an `every`) so we can determine equality as fast as possible.
-  var length = prev.length;
-  for (var i = 0; i < length; i++) {
-    if (!equalityCheck(prev[i], next[i])) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-function defaultMemoize(func) {
-  var equalityCheck = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultEqualityCheck;
-
-  var lastArgs = null;
-  var lastResult = null;
-  // we reference arguments instead of spreading them for performance reasons
-  return function () {
-    var changed = false;
-
-    if (!areArgumentsShallowlyEqual(equalityCheck, lastArgs, arguments)) {
-      // apply arguments instead of spreading for performance.
-      lastResult = func.apply(null, arguments);
-      changed = true;
-    }
-
-    lastArgs = arguments;
-
-    return {
-      hasChanged: changed,
-      data: lastResult
-    };
-  };
-}
-
-var getNotifyingSelectorCreator = function getNotifyingSelectorCreator() {
-  return createSelectorCreator(defaultMemoize);
+var error = function error(location, msg) {
+  throw new Error("*** Error in " + location + ": " + msg);
 };
 
-function slimReduxReact(params) {
-  var WrappedComponent = params.component;
-  var changeTriggers = params.changeTriggers || {};
-  var subscriptions = params.subscriptions || {};
+function connect(component, subsAndCalcs, changeTriggers) {
+    var displayName = component.displayName || component.name || 'SlimReduxReact',
+        error$$1 = function error$$1(msg) {
+        return error('<' + displayName + '/>', msg);
+    };
 
-  var displayName = WrappedComponent.displayName || WrappedComponent.name || '';
+    var SlimReduxConnector = function (_React$Component) {
+        _inherits(SlimReduxConnector, _React$Component);
 
-  // Returns the appropriate part of the state for a string like "state.todo.active"
-  var _getStateFromSubscriptionString = function _getStateFromSubscriptionString(subscriptionString, state) {
-    var subStringParts = subscriptionString.split('.');
-    var currentPath = 'state';
-    var stateFromString = state;
+        function SlimReduxConnector(props, context) {
+            _classCallCheck(this, SlimReduxConnector);
 
-    for (var i = 1; i < subStringParts.length; i++) {
-      var nextPath = subStringParts[i];
-      currentPath += '.' + nextPath;
+            // Check for store instance
+            var _this = _possibleConstructorReturn(this, (SlimReduxConnector.__proto__ || _Object$getPrototypeOf(SlimReduxConnector)).call(this, props));
 
-      if (!(nextPath in stateFromString)) console.error('*** Error in slimReduxReact container ' + displayName + ':\nCannot find path "' + currentPath + ' in state.\nState: ' + _JSON$stringify(state, null, 2) + '"');
+            if (!context.store) error$$1('No store found in context. Did you forget to wrap your code in the <Provider> component?');
 
-      stateFromString = stateFromString[nextPath];
-    }
+            var store = context.store;
 
-    return stateFromString;
-  };
+            // Setup initial state
+            var initialState = {};
 
-  // Retrieves the data for the subscriptions, first part of the subscription selector
-  var getSubscriptions = function getSubscriptions(state) {
-    var storeSubscriptions = {};
-    _Object$keys(subscriptions).map(function (subscription) {
-      return storeSubscriptions[subscription] = _getStateFromSubscriptionString(subscriptions[subscription], state);
-    });
-    return storeSubscriptions;
-  };
+            // Go through subscriptions and calculations and set them up to feed into the state
+            _Object$keys(subsAndCalcs).map(function (key) {
+                var stateKey = key;
 
-  // Create subscrption selector
-  var createNotifyingSelector = getNotifyingSelectorCreator();
-  var checkSubscriptionSelector = createNotifyingSelector(getSubscriptions, function (subscriptionData) {
-    return subscriptionData;
-  });
+                // Create a closure so that the stateKey is still available after this setup code has executed
+                (function () {
+                    var _this2 = this;
 
-  // Create change creators    TODO: change creators could also be functions to mock stuff!!
+                    // Hook it up to the state
+                    var getInitialValue = subsAndCalcs[key](function (value) {
+                        _this2.setState(_extends({}, _this2.state, _defineProperty({}, stateKey, value)));
+                    }, store);
 
+                    // Get initial state
+                    initialState[key] = getInitialValue();
+                })();
+            });
 
-  var SlimReduxConnector = function (_React$Component) {
-    _inherits(SlimReduxConnector, _React$Component);
+            _this.wrappedChangeTriggers = {};
 
-    function SlimReduxConnector(props, context) {
-      _classCallCheck(this, SlimReduxConnector);
+            // Go through change triggers and wrap them to use the current store instance
+            _Object$keys(changeTriggers).map(function (key) {
+                wrappedChangeTriggers[key] = function () {
+                    // Creating a new closure to preserve the store instance
+                    var ct = changeTriggers[key];
 
-      var _this = _possibleConstructorReturn(this, (SlimReduxConnector.__proto__ || _Object$getPrototypeOf(SlimReduxConnector)).call(this, props));
+                    // We only pass down the parameters to the change trigger if the change trigger accepts any
 
-      if (!context.store) console.error('*** Error in SlimReduxConnector component: No store found in context. Did you forget to wrap your code in the <Provider> component?');
+                    for (var _len = arguments.length, params = Array(_len), _key = 0; _key < _len; _key++) {
+                        params[_key] = arguments[_key];
+                    }
 
-      var initialSubscriptionState = checkSubscriptionSelector(context.store.getState());
-      _this.state = _extends({}, initialSubscriptionState.data);
+                    if (ct.length === 1) ct(store);else ct.apply(undefined, params.concat([store]));
+                };
+            });
+            return _this;
+        }
 
-      _this.registeredChangeTriggers = {};
-      _Object$keys(changeTriggers).map(function (changeTrigger) {
-        return _this.registeredChangeTriggers[changeTrigger] = context.store.createChangeTrigger(changeTriggers[changeTrigger]);
-      });
-      return _this;
-    }
+        _createClass(SlimReduxConnector, [{
+            key: 'componentDidMount',
+            value: function componentDidMount() {}
+        }, {
+            key: 'render',
+            value: function render() {
+                return React.createElement(WrappedComponent, _extends({}, this.props, this.wrappedChangeTriggers, this.state));
+            }
+        }]);
 
-    _createClass(SlimReduxConnector, [{
-      key: 'componentDidMount',
-      value: function componentDidMount() {
-        var _this2 = this;
+        return SlimReduxConnector;
+    }(React.Component);
 
-        // SUBSCRIBE THIS MOTHERFUCKER TO SUBSCRIPTION CHANGES!
-        this.context.store.subscribe(function () {
-          var subscriptionState = checkSubscriptionSelector(_this2.context.store.getState());
+    SlimReduxConnector.displayName = 'SlimReduxConnector' + displayName;
 
-          if (subscriptionState.hasChanged) _this2.setState(_extends({}, _this2.state, subscriptionState.data));
-        });
-      }
-    }, {
-      key: 'render',
-      value: function render() {
-        return React.createElement(WrappedComponent, _extends({}, this.props, this.registeredChangeTriggers, this.state));
-      }
-    }]);
+    SlimReduxConnector.contextTypes = {
+        store: React.PropTypes.object
+    };
 
     return SlimReduxConnector;
-  }(React.Component);
-
-  SlimReduxConnector.displayName = 'SlimReduxConnector' + displayName;
-
-  SlimReduxConnector.contextTypes = {
-    store: React.PropTypes.object
-  };
-
-  return SlimReduxConnector;
 }
 
-export { slimReduxReact, Provider };
+function subscription$1(subscription$$1) {
+    var createSubscription = function createSubscription(changeCallback, storeArg) {
+        return subscription(subscription$$1, changeCallback, storeArg);
+    };
+    return createSubscription;
+}
+
+function calculation$1(subscriptions, calcFunction) {
+    var createCalculation = function createCalculation(changeCallback, storeArg) {
+        return calculation(subscriptions, calcFunction, changeCallback, storeArg);
+    };
+    return createCalculation;
+}
+
+function changeTrigger$1(actionType, reducer, focusSubString) {
+    var createChangeTrigger = function createChangeTrigger(actionType, reducer, focusSubString) {
+        return changeTrigger(actionType, reducer, focusSubString);
+    };
+    return createChangeTrigger;
+}
+
+function asyncChangeTrigger(actionType, reducer, focusSubString) {
+    var createAsyncChangeTrigger = function createAsyncChangeTrigger(actionType, reducer, focusSubString) {
+        return slimReduxChangeTrigger(actionType, reducer, focusSubString);
+    };
+    return createAsyncChangeTrigger;
+}
+
+export { connect, Provider, subscription$1 as subscription, calculation$1 as calculation, changeTrigger$1 as changeTrigger, asyncChangeTrigger };
 //# sourceMappingURL=index.es.js.map
