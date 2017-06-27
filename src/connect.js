@@ -11,8 +11,6 @@ export function connect(component, stuff){
         constructor(props, context){
             super(props);
 
-            debugger;
-
             // Check for store instance
             if(!context.store)
                 error(`No store found in context. Did you forget to wrap your code in the <Provider> component?`);
@@ -44,7 +42,7 @@ export function connect(component, stuff){
                     // Create a closure so that the stateKey is still available after this setup code has executed
                     (function(){
                         // Hook it up to the state
-                        const getInitialValue = subsAndCalcs[key](value => {
+                        const getInitialValue = stuff[key].creatorFunction(value => {
                             this.setState({...this.state, [stateKey]: value});
                         }, store);
 
@@ -64,10 +62,9 @@ export function connect(component, stuff){
                             ct(store);
                         else
                             ct(...params, store);
-                        }
                     }
                 }
-            })
+            });
 
             // Set initial state
             this.state = initialState;
@@ -112,7 +109,6 @@ export function connect(component, stuff){
         componentDidMount() {}
 
         render() {
-            debugger;
             return <WrappedComponent {...this.props} {...this.initialState} {...this.wrappedChangeTriggers} {...this.state}/>
         }
     }
