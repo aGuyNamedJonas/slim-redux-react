@@ -48,7 +48,7 @@ export function connect(component, stuff){
 
                         // Get initial state
                         initialState[key] = getInitialValue();
-                    })()
+                    }).apply(this, [])
                 }
 
                 // Setup change trigger / async change trigger
