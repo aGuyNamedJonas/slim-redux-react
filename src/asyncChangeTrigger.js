@@ -1,6 +1,10 @@
+import { ASYNC_CHANGE_TRIGGER } from './constants';
 import { asyncChangeTrigger as slimReduxAsyncChangeTrigger } from 'slim-redux';
 
 export function asyncChangeTrigger(actionType, reducer, focusSubString) {
-    const createAsyncChangeTrigger = (actionType, reducer, focusSubString) => slimReduxChangeTrigger(actionType, reducer, focusSubString);
-    return createAsyncChangeTrigger;
+    const createAsyncChangeTrigger = () => slimReduxAsyncChangeTrigger(actionType, reducer, focusSubString);
+    return {
+        type            : ASYNC_CHANGE_TRIGGER,
+        creatorFunction : createAsyncChangeTrigger, 
+    };
 }
