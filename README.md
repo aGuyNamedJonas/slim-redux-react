@@ -354,6 +354,13 @@ Since slim-redux-react is the wrapper for `slim-redux`, there are even more reci
 [^ Table of Contents ^](#toc)
 
 
+## <a name="reusing-slim-redux-code"></a>Reusing slim-redux code in slim-redux-react  
+**TODO: Insert code examples on how to share code between the two projects**
+
+<br><br>
+[^ Table of Contents ^](#toc)
+
+
 ## <a name="future-development"></a>Future Development  
 Nothing planned yet so far. I'll have to wait for [feedback](#feedback) or [contributions](#contribute) coming in - I'll keep this updated!
 
