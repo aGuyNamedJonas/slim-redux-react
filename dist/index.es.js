@@ -9,7 +9,7 @@ import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructo
 import _inherits from 'babel-runtime/helpers/inherits';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { asyncChangeTrigger, calculation, changeTrigger, subscription } from 'slim-redux';
+import { asyncChangeTrigger, calculation, changeTrigger, createSlimReduxStore, subscription } from 'slim-redux';
 
 var error = function error(location, msg) {
   throw new Error('*** Error in ' + location + ': ' + msg);
@@ -92,7 +92,6 @@ function connect(component, stuff) {
 
                         // Hook it up to the state
                         var getInitialValue = stuff[key].creatorFunction(function (value) {
-                            console.log('*** Changecallback for ' + stateKey + ', new value: ' + value);
                             _this2.setState(_defineProperty({}, stateKey, value));
                         }, store);
 
@@ -243,5 +242,5 @@ function asyncChangeTrigger$1(changeTriggers, triggerFunction) {
     };
 }
 
-export { connect, Provider, subscription$1 as subscription, calculation$1 as calculation, changeTrigger$1 as changeTrigger, asyncChangeTrigger$1 as asyncChangeTrigger };
+export { connect, Provider, subscription$1 as subscription, calculation$1 as calculation, changeTrigger$1 as changeTrigger, asyncChangeTrigger$1 as asyncChangeTrigger, createSlimReduxStore };
 //# sourceMappingURL=index.es.js.map

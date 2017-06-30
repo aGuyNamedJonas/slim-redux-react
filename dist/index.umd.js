@@ -96,7 +96,6 @@ function connect(component, stuff) {
 
                         // Hook it up to the state
                         var getInitialValue = stuff[key].creatorFunction(function (value) {
-                            console.log('*** Changecallback for ' + stateKey + ', new value: ' + value);
                             _this2.setState(_defineProperty({}, stateKey, value));
                         }, store);
 
@@ -253,6 +252,7 @@ exports.subscription = subscription$1;
 exports.calculation = calculation$1;
 exports.changeTrigger = changeTrigger$1;
 exports.asyncChangeTrigger = asyncChangeTrigger$1;
+exports.createSlimReduxStore = slimRedux.createSlimReduxStore;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
