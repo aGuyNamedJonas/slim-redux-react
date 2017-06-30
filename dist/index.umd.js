@@ -1,11 +1,11 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('babel-runtime/helpers/defineProperty'), require('babel-runtime/helpers/extends'), require('babel-runtime/core-js/object/keys'), require('babel-runtime/core-js/json/stringify'), require('babel-runtime/core-js/object/get-prototype-of'), require('babel-runtime/helpers/classCallCheck'), require('babel-runtime/helpers/createClass'), require('babel-runtime/helpers/possibleConstructorReturn'), require('babel-runtime/helpers/inherits'), require('react'), require('react-redux'), require('slim-redux')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'babel-runtime/helpers/defineProperty', 'babel-runtime/helpers/extends', 'babel-runtime/core-js/object/keys', 'babel-runtime/core-js/json/stringify', 'babel-runtime/core-js/object/get-prototype-of', 'babel-runtime/helpers/classCallCheck', 'babel-runtime/helpers/createClass', 'babel-runtime/helpers/possibleConstructorReturn', 'babel-runtime/helpers/inherits', 'react', 'react-redux', 'slim-redux'], factory) :
-  (factory((global.slim-redux-react = global.slim-redux-react || {}),global._defineProperty,global._extends,global._Object$keys,global._JSON$stringify,global._Object$getPrototypeOf,global._classCallCheck,global._createClass,global._possibleConstructorReturn,global._inherits,global.React,global.reactRedux,global.slimRedux));
-}(this, (function (exports,_defineProperty,_extends,_Object$keys,_JSON$stringify,_Object$getPrototypeOf,_classCallCheck,_createClass,_possibleConstructorReturn,_inherits,React,reactRedux,slimRedux) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('babel-runtime/helpers/extends'), require('babel-runtime/helpers/defineProperty'), require('babel-runtime/core-js/object/keys'), require('babel-runtime/core-js/json/stringify'), require('babel-runtime/core-js/object/get-prototype-of'), require('babel-runtime/helpers/classCallCheck'), require('babel-runtime/helpers/createClass'), require('babel-runtime/helpers/possibleConstructorReturn'), require('babel-runtime/helpers/inherits'), require('react'), require('react-redux'), require('slim-redux')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'babel-runtime/helpers/extends', 'babel-runtime/helpers/defineProperty', 'babel-runtime/core-js/object/keys', 'babel-runtime/core-js/json/stringify', 'babel-runtime/core-js/object/get-prototype-of', 'babel-runtime/helpers/classCallCheck', 'babel-runtime/helpers/createClass', 'babel-runtime/helpers/possibleConstructorReturn', 'babel-runtime/helpers/inherits', 'react', 'react-redux', 'slim-redux'], factory) :
+  (factory((global.slim-redux-react = global.slim-redux-react || {}),global._extends,global._defineProperty,global._Object$keys,global._JSON$stringify,global._Object$getPrototypeOf,global._classCallCheck,global._createClass,global._possibleConstructorReturn,global._inherits,global.React,global.reactRedux,global.slimRedux));
+}(this, (function (exports,_extends,_defineProperty,_Object$keys,_JSON$stringify,_Object$getPrototypeOf,_classCallCheck,_createClass,_possibleConstructorReturn,_inherits,React,reactRedux,slimRedux) { 'use strict';
 
-_defineProperty = 'default' in _defineProperty ? _defineProperty['default'] : _defineProperty;
 _extends = 'default' in _extends ? _extends['default'] : _extends;
+_defineProperty = 'default' in _defineProperty ? _defineProperty['default'] : _defineProperty;
 _Object$keys = 'default' in _Object$keys ? _Object$keys['default'] : _Object$keys;
 _JSON$stringify = 'default' in _JSON$stringify ? _JSON$stringify['default'] : _JSON$stringify;
 _Object$getPrototypeOf = 'default' in _Object$getPrototypeOf ? _Object$getPrototypeOf['default'] : _Object$getPrototypeOf;
@@ -96,7 +96,8 @@ function connect(component, stuff) {
 
                         // Hook it up to the state
                         var getInitialValue = stuff[key].creatorFunction(function (value) {
-                            _this2.setState(_extends({}, _this2.state, _defineProperty({}, stateKey, value)));
+                            console.log('*** Changecallback for ' + stateKey + ', new value: ' + value);
+                            _this2.setState(_defineProperty({}, stateKey, value));
                         }, store);
 
                         // Get initial state
@@ -111,9 +112,6 @@ function connect(component, stuff) {
                         ct = stuff[ctKey].creatorFunction();
 
                     _this.wrappedChangeTriggers[key] = function () {
-                        console.log('Registering change triggers, key: ' + ctKey + '\n ct:');
-                        console.dir(ct);
-
                         // We only pass down the parameters to the change trigger if the change trigger accepts any
                         if (ct.length === 1) return function () {
                             ct(ctStore);

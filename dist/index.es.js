@@ -1,5 +1,5 @@
-import _defineProperty from 'babel-runtime/helpers/defineProperty';
 import _extends from 'babel-runtime/helpers/extends';
+import _defineProperty from 'babel-runtime/helpers/defineProperty';
 import _Object$keys from 'babel-runtime/core-js/object/keys';
 import _JSON$stringify from 'babel-runtime/core-js/json/stringify';
 import _Object$getPrototypeOf from 'babel-runtime/core-js/object/get-prototype-of';
@@ -92,7 +92,8 @@ function connect(component, stuff) {
 
                         // Hook it up to the state
                         var getInitialValue = stuff[key].creatorFunction(function (value) {
-                            _this2.setState(_extends({}, _this2.state, _defineProperty({}, stateKey, value)));
+                            console.log('*** Changecallback for ' + stateKey + ', new value: ' + value);
+                            _this2.setState(_defineProperty({}, stateKey, value));
                         }, store);
 
                         // Get initial state
@@ -107,9 +108,6 @@ function connect(component, stuff) {
                         ct = stuff[ctKey].creatorFunction();
 
                     _this.wrappedChangeTriggers[key] = function () {
-                        console.log('Registering change triggers, key: ' + ctKey + '\n ct:');
-                        console.dir(ct);
-
                         // We only pass down the parameters to the change trigger if the change trigger accepts any
                         if (ct.length === 1) return function () {
                             ct(ctStore);
