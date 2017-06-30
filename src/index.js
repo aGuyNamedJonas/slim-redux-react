@@ -4,6 +4,7 @@ import { subscription } from './subscription';
 import { calculation } from './calculation';
 import { changeTrigger } from './changeTrigger';
 import { asyncChangeTrigger } from './asyncChangeTrigger';
+import { createSlimReduxStore } from 'slim-redux';
 
 export {
   connect,
@@ -12,4 +13,5 @@ export {
   calculation,
   changeTrigger,
   asyncChangeTrigger,
+  createSlimReduxStore,
 }

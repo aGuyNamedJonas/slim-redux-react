@@ -41,7 +41,6 @@ export function connect(component, stuff){
                     (function(){
                         // Hook it up to the state
                         const getInitialValue = stuff[key].creatorFunction(value => {
-                            console.log(`*** Changecallback for ${stateKey}, new value: ${value}`);
                             this.setState({ [stateKey]: value });
                         }, store);
 
