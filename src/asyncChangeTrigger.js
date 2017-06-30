@@ -28,9 +28,6 @@ export function asyncChangeTrigger(changeTriggers, triggerFunction) {
             error(`Issue with changeTriggers[${key}]: Does not seem to be a changeTrigger created with the slim-redux-react API. ${SLIM_REDUX_COMP_NOTICE} \n ${JSON.stringify(arguments, null, 2)}`);
     });
 
-    console.log('Initialized change triggers in asyncChangeTrigger (slim-redux-react):');
-    console.dir(changeTriggersInitialized);
-
     const createAsyncChangeTrigger = () => slimReduxAsyncChangeTrigger(changeTriggersInitialized, triggerFunction);
     return {
         type            : ASYNC_CHANGE_TRIGGER,
