@@ -2,10 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { connect, subscription, calculation, changeTrigger, asyncChangeTrigger, Provider } from 'slim-redux-react';
-import { createSlimReduxStore, subscription as slimReduxSubscription } from 'slim-redux';
+import { createSlimReduxStore, subscription as slimReduxSubscription, calculation as slimReduxCalculation } from 'slim-redux';
 
-const store      = createSlimReduxStore({ counter: 1, stuff: 'state' }),
-      stateLog   = slimReduxSubscription('state', state => console.log(`New state.counter: ${JSON.stringify(state, null, 2)}`));
+const store      = createSlimReduxStore({ counter: 1, stuff: 'state' });
+      
+// Uncomment these to get a console output of what's going on!   
+// const stateLog   = slimReduxSubscription('state', state => console.log(`New state.counter: ${JSON.stringify(state, null, 2)}`)),
+//       stateCalc  = slimReduxCalculation(['state.counter'], counter => counter + 5, calcPlus => console.log(`Increased counter value: ${calcPlus}`));
 
 // stuff definitions
 const counter      = subscription('state.counter'),

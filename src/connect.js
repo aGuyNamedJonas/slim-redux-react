@@ -41,7 +41,8 @@ export function connect(component, stuff){
                     (function(){
                         // Hook it up to the state
                         const getInitialValue = stuff[key].creatorFunction(value => {
-                            this.setState({...this.state, [stateKey]: value});
+                            console.log(`*** Changecallback for ${stateKey}, new value: ${value}`);
+                            this.setState({ [stateKey]: value });
                         }, store);
 
                         // Get initial state
@@ -56,9 +57,6 @@ export function connect(component, stuff){
                           ct      = stuff[ctKey].creatorFunction();
 
                     this.wrappedChangeTriggers[key] = (function(){
-                        console.log(`Registering change triggers, key: ${ctKey}\n ct:`);
-                        console.dir(ct);
-
                         // We only pass down the parameters to the change trigger if the change trigger accepts any
                         if(ct.length === 1)
                             return function(...params) { 
