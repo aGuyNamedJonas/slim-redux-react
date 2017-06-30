@@ -53,16 +53,28 @@ export function connect(component, stuff){
 
                 // Setup change trigger / async change trigger
                 if(stuff[key].type === CHANGE_TRIGGER || stuff[key].type === ASYNC_CHANGE_TRIGGER) {
-                    this.wrappedChangeTriggers[key] = function(...params){
-                        // Creating a new closure to preserve the store instance
-                        const ct = stuff[key].creatorFunction();
+                    const ctKey   = key,
+                          ctStore = store,
+                          ct      = stuff[ctKey].creatorFunction();
+
+                    this.wrappedChangeTriggers[key] = (function(){
+                        console.log(`Registering change triggers, key: ${ctKey}\n ct:`);
+                        console.dir(ct);
 
                         // We only pass down the parameters to the change trigger if the change trigger accepts any
                         if(ct.length === 1)
-                            ct(store);
+                            return function(...params) { 
+                                console.log(`Calling change trigger function without parameters`);
+                                console.dir(params);
+                                ct(ctStore) 
+                            };
                         else
-                            ct(...params, store);
-                    }
+                            return function(...params) {
+                                console.log(`Calling change trigger function WITH parameters`); 
+                                console.dir(params);
+                                ct(...params, ctStore) 
+                            };
+                    })()
                 }
             });
 

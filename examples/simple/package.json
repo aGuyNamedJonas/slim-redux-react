@@ -5,6 +5,7 @@
   "dependencies": {
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "slim-redux": "^0.2.7",
     "slim-redux-react": "^0.2.1"
   },
   "devDependencies": {

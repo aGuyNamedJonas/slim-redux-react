@@ -11,7 +11,14 @@ const store      = createSlimReduxStore({ counter: 1 }),
 const counter  = subscription('state.counter'),
       inc      = changeTrigger('INCREMENT_COUNTER', (value, counter) => counter + value, 'state.counter'),
       dec      = changeTrigger('DECREMENT_COUNTER', (value, counter) => counter - value, 'state.counter'),
-      asyncInc = asyncChangeTrigger({ inc }, (value, ct) => setTimeout(() => ct.inc(value), 2000));
+      asyncInc = asyncChangeTrigger({ inc }, (value, ct) => {
+          console.log(`value: ${value}`);
+          console.log(`ct Object:`);
+          console.dir(ct);
+          console.log('Trying to call ct.inc():');
+          ct.inc();
+          setTimeout(() => ct.inc(value), 2000);
+      });
 
 const Counter = ({ counter, inc, dec, asyncInc }) => (
     <div>
