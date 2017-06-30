@@ -240,9 +240,6 @@ function asyncChangeTrigger$1(changeTriggers, triggerFunction) {
         if (changeTriggers[key].type === CHANGE_TRIGGER) changeTriggersInitialized[key] = changeTriggers[key].creatorFunction();else error$1('Issue with changeTriggers[' + key + ']: Does not seem to be a changeTrigger created with the slim-redux-react API. ' + SLIM_REDUX_COMP_NOTICE + ' \n ' + _JSON$stringify(_arguments, null, 2));
     });
 
-    console.log('Initialized change triggers in asyncChangeTrigger (slim-redux-react):');
-    console.dir(changeTriggersInitialized);
-
     var createAsyncChangeTrigger = function createAsyncChangeTrigger() {
         return slimRedux.asyncChangeTrigger(changeTriggersInitialized, triggerFunction);
     };
