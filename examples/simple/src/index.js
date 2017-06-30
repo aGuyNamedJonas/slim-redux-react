@@ -4,25 +4,22 @@ import ReactDOM from 'react-dom';
 import { connect, subscription, calculation, changeTrigger, asyncChangeTrigger, Provider } from 'slim-redux-react';
 import { createSlimReduxStore, subscription as slimReduxSubscription } from 'slim-redux';
 
-const store      = createSlimReduxStore({ counter: 1 }),
-      counterLog = slimReduxSubscription('state.counter', counter => console.log(`New state.counter: ${counter}`));
+const store      = createSlimReduxStore({ counter: 1, stuff: 'state' }),
+      stateLog   = slimReduxSubscription('state', state => console.log(`New state.counter: ${JSON.stringify(state, null, 2)}`));
 
 // stuff definitions
-const counter  = subscription('state.counter'),
-      inc      = changeTrigger('INCREMENT_COUNTER', (value, counter) => counter + value, 'state.counter'),
-      dec      = changeTrigger('DECREMENT_COUNTER', (value, counter) => counter - value, 'state.counter'),
-      asyncInc = asyncChangeTrigger({ inc }, (value, ct) => {
-          console.log(`value: ${value}`);
-          console.log(`ct Object:`);
-          console.dir(ct);
-          console.log('Trying to call ct.inc():');
-          ct.inc();
+const counter      = subscription('state.counter'),
+      inc          = changeTrigger('INCREMENT_COUNTER', (value, counter) => counter + value, 'state.counter'),
+      dec          = changeTrigger('DECREMENT_COUNTER', (value, counter) => counter - value, 'state.counter'),
+      asyncInc     = asyncChangeTrigger({ inc }, (value, ct) => {
           setTimeout(() => ct.inc(value), 2000);
-      });
+      }),
+      counterPlus  = calculation(['state.counter'], counter => counter + 5);
 
-const Counter = ({ counter, inc, dec, asyncInc }) => (
+const Counter = ({ counter, inc, dec, asyncInc, counterPlus }) => (
     <div>
-        <div>Counter: {counter}</div>
+        <div>Counter (default): {counter}</div>
+        <div>Counter (plus five): {counterPlus}</div>
         <div>
             <button onClick={e => inc(1)}>+</button>
             <button onClick={e => dec(1)}>-</button>
@@ -33,7 +30,7 @@ const Counter = ({ counter, inc, dec, asyncInc }) => (
     </div>
 );
 
-const CounterContainer = connect(Counter, { counter, inc, dec, asyncInc });
+const CounterContainer = connect(Counter, { counter, inc, dec, asyncInc, counterPlus });
 
 const App = () => (
     <Provider store={store}>

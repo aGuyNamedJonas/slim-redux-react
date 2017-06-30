@@ -85,8 +85,6 @@ function connect(component, stuff) {
 
             // Go through the stuff object
             _Object$keys(stuff).map(function (key) {
-                console.log('\uD83D\uDCA9\uD83D\uDCA9\uD83D\uDCA9 Processing prop: "' + key + '" of type ' + stuff[key].type);
-
                 // Make sure that the API functions have been used!
                 if (!stuff[key].type || !(stuff[key].type === SUBSCRIPTION || stuff[key].type === CALCULATION || stuff[key].type === CHANGE_TRIGGER || stuff[key].type === ASYNC_CHANGE_TRIGGER)) error$$1('No "type" field found in stuff-object element "' + key + '". Make sure to use the slim-redux-react API functions to create subscriptions, calculations, and (async) change triggers! \n ' + _JSON$stringify(stuff, null, 2));
 
@@ -120,22 +118,12 @@ function connect(component, stuff) {
 
                         // We only pass down the parameters to the change trigger if the change trigger accepts any
                         if (ct.length === 1) return function () {
-                            console.log('Calling change trigger function without parameters');
-
+                            ct(ctStore);
+                        };else return function () {
                             for (var _len = arguments.length, params = Array(_len), _key = 0; _key < _len; _key++) {
                                 params[_key] = arguments[_key];
                             }
 
-                            console.dir(params);
-                            ct(ctStore);
-                        };else return function () {
-                            console.log('Calling change trigger function WITH parameters');
-
-                            for (var _len2 = arguments.length, params = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-                                params[_key2] = arguments[_key2];
-                            }
-
-                            console.dir(params);
                             ct.apply(undefined, params.concat([ctStore]));
                         };
                     }();

@@ -29,8 +29,6 @@ export function connect(component, stuff){
             
             // Go through the stuff object
             Object.keys(stuff).map(key => {
-                console.log(`💩💩💩 Processing prop: "${key}" of type ${stuff[key].type}`);
-
                 // Make sure that the API functions have been used!
                 if(!stuff[key].type || !(stuff[key].type === SUBSCRIPTION || stuff[key].type === CALCULATION || stuff[key].type === CHANGE_TRIGGER || stuff[key].type === ASYNC_CHANGE_TRIGGER))
                     error(`No "type" field found in stuff-object element "${key}". Make sure to use the slim-redux-react API functions to create subscriptions, calculations, and (async) change triggers! \n ${JSON.stringify(stuff, null, 2)}`);
@@ -64,14 +62,10 @@ export function connect(component, stuff){
                         // We only pass down the parameters to the change trigger if the change trigger accepts any
                         if(ct.length === 1)
                             return function(...params) { 
-                                console.log(`Calling change trigger function without parameters`);
-                                console.dir(params);
                                 ct(ctStore) 
                             };
                         else
                             return function(...params) {
-                                console.log(`Calling change trigger function WITH parameters`); 
-                                console.dir(params);
                                 ct(...params, ctStore) 
                             };
                     })()
