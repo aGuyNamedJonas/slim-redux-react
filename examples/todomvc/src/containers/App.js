@@ -1,5 +1,5 @@
-import React, { PropTypes } from 'react'
-import { bindActionCreators } from 'redux'
+import React from 'react'
+import PropTypes from 'prop-types'
 import Header from '../components/Header'
 import MainSection from '../components/MainSection'
 import TodoChangeTriggerDefs from '../changeTriggers'

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { getNotifyingSelectorCreator, areArgumentsShallowlyEqual } from './selector';
 
 function slimReduxReact(params) {
@@ -79,7 +80,7 @@ function slimReduxReact(params) {
   SlimReduxConnector.displayName = `SlimReduxConnector${displayName}`;
 
   SlimReduxConnector.contextTypes = {
-    store: React.PropTypes.object
+    store: PropTypes.object
   }
 
   return SlimReduxConnector;
