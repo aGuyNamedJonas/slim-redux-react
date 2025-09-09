@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { slimReduxReact } from 'slim-redux-react';
 import counterChangeTriggers from './counterChangeTriggers';
 import { ComplexCounter } from './ComplexCounter';
